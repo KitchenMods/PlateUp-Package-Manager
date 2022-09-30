@@ -19,6 +19,8 @@ namespace PlateUp_Package_Manager
 		public static string packageManagerPath = applicationDataPath + "PlateUp Package Manager/";
 
 		public static string settingsFilePath = packageManagerPath + "settings.json";
+		public static string installedPackagesFilePath = packageManagerPath + "installedPackages.json";
+		public static string installedReposFilePath = packageManagerPath + "installedRepos.json";
 
 		public static void MakeSureDirectoryExists(string path)
 		{
@@ -44,21 +46,17 @@ namespace PlateUp_Package_Manager
 
 		public static void SetupSettings()
 		{
-			if (!File.Exists(RefVars.settingsFilePath))
-				File.Create(RefVars.settingsFilePath);
-
 			Load();
 		}
 
 		public static void Save()
 		{
-			RefVars.MakeSureFileExists(RefVars.settingsFilePath);
 			File.WriteAllText(RefVars.settingsFilePath, JsonConvert.SerializeObject(Settings));
 		}
 
 		public static void Load()
 		{
-			Dictionary<string, object> settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(RefVars.settingsFilePath);
+			Dictionary<string, object> settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(RefVars.settingsFilePath));
 			Settings = settings;
 		}
 
@@ -68,6 +66,12 @@ namespace PlateUp_Package_Manager
 				Settings[key] = value;
 			else
 				Settings.Add(key, value);
+		}
+
+		public static void Remove(string key)
+		{
+			if (Settings.ContainsKey(key))
+				Settings.Remove(key);
 		}
 
 		public static T Get<T>(string key)

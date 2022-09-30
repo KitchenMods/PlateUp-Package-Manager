@@ -23,7 +23,6 @@ namespace PlateUp_Package_Manager
 		{
 			RefVars.UniversalOnFormLoad(this);
 			RefVars.MakeSureDirectoryExists(RefVars.packageManagerPath);
-			RefVars.MakeSureFileExists(RefVars.settingsFilePath);
 			textBox1.Text = FindPlateUpGame();
 			label_messages.Text = messages[messagesIndex];
 		}

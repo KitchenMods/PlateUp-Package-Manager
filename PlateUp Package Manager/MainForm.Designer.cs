@@ -34,15 +34,17 @@
 			this.button_installed = new System.Windows.Forms.Button();
 			this.button_search = new System.Windows.Forms.Button();
 			this.panel_home = new System.Windows.Forms.Panel();
-			this.panel_repositories = new System.Windows.Forms.Panel();
-			this.panel_installed = new System.Windows.Forms.Panel();
-			this.panel_search = new System.Windows.Forms.Panel();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
+			this.panel_repositories = new System.Windows.Forms.Panel();
+			this.label2 = new System.Windows.Forms.Label();
+			this.panel_installed = new System.Windows.Forms.Panel();
+			this.button_installed_remove = new System.Windows.Forms.Button();
+			this.listBox_installed = new System.Windows.Forms.ListBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.panel_search = new System.Windows.Forms.Panel();
+			this.label4 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
 			this.panel_home.SuspendLayout();
 			this.panel_repositories.SuspendLayout();
@@ -100,69 +102,16 @@
 			this.panel_home.Size = new System.Drawing.Size(776, 397);
 			this.panel_home.TabIndex = 4;
 			// 
-			// panel_repositories
+			// label7
 			// 
-			this.panel_repositories.Controls.Add(this.label2);
-			this.panel_repositories.Location = new System.Drawing.Point(852, 12);
-			this.panel_repositories.Name = "panel_repositories";
-			this.panel_repositories.Size = new System.Drawing.Size(776, 397);
-			this.panel_repositories.TabIndex = 5;
-			// 
-			// panel_installed
-			// 
-			this.panel_installed.Controls.Add(this.label3);
-			this.panel_installed.Location = new System.Drawing.Point(12, 465);
-			this.panel_installed.Name = "panel_installed";
-			this.panel_installed.Size = new System.Drawing.Size(776, 397);
-			this.panel_installed.TabIndex = 6;
-			// 
-			// panel_search
-			// 
-			this.panel_search.Controls.Add(this.label4);
-			this.panel_search.Location = new System.Drawing.Point(852, 465);
-			this.panel_search.Name = "panel_search";
-			this.panel_search.Size = new System.Drawing.Size(776, 397);
-			this.panel_search.TabIndex = 6;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(0, 0);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(404, 31);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "PlateUp Mod Manager - Home";
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(0, 0);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(492, 31);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "PlateUp Mod Manager - Repositories";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(0, 0);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(439, 31);
-			this.label3.TabIndex = 2;
-			this.label3.Text = "PlateUp Mod Manager - Installed";
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(0, 0);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(420, 31);
-			this.label4.TabIndex = 3;
-			this.label4.Text = "PlateUp Mod Manager - Search";
+			this.label7.AutoSize = true;
+			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label7.Location = new System.Drawing.Point(5, 73);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(668, 48);
+			this.label7.TabIndex = 3;
+			this.label7.Text = "PLEASE NOTE: PlateUp does NOT officially support mods.\r\n\r\nWe ( Or any other unoff" +
+    "icial mods ) are not directly affiliated with the PlateUp game, or Yogscast.\r\n";
 			// 
 			// label5
 			// 
@@ -174,16 +123,89 @@
 			this.label5.TabIndex = 1;
 			this.label5.Text = "Welcome to PlateUp Mod Manager!";
 			// 
-			// label7
+			// label1
 			// 
-			this.label7.AutoSize = true;
-			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label7.Location = new System.Drawing.Point(5, 73);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(668, 48);
-			this.label7.TabIndex = 3;
-			this.label7.Text = "PLEASE NOTE: PlateUp does NOT officially support mods.\r\n\r\nWe ( Or any other unoff" +
-    "icial mods ) are not directly affiliated with the PlateUp game, or Yogscast.\r\n";
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(0, 0);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(404, 31);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "PlateUp Mod Manager - Home";
+			// 
+			// panel_repositories
+			// 
+			this.panel_repositories.Controls.Add(this.label2);
+			this.panel_repositories.Location = new System.Drawing.Point(852, 12);
+			this.panel_repositories.Name = "panel_repositories";
+			this.panel_repositories.Size = new System.Drawing.Size(776, 397);
+			this.panel_repositories.TabIndex = 5;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(0, 0);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(492, 31);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "PlateUp Mod Manager - Repositories";
+			// 
+			// panel_installed
+			// 
+			this.panel_installed.Controls.Add(this.button_installed_remove);
+			this.panel_installed.Controls.Add(this.listBox_installed);
+			this.panel_installed.Controls.Add(this.label3);
+			this.panel_installed.Location = new System.Drawing.Point(12, 465);
+			this.panel_installed.Name = "panel_installed";
+			this.panel_installed.Size = new System.Drawing.Size(776, 397);
+			this.panel_installed.TabIndex = 6;
+			// 
+			// button_installed_remove
+			// 
+			this.button_installed_remove.Location = new System.Drawing.Point(416, 367);
+			this.button_installed_remove.Name = "button_installed_remove";
+			this.button_installed_remove.Size = new System.Drawing.Size(75, 23);
+			this.button_installed_remove.TabIndex = 4;
+			this.button_installed_remove.Text = "Remove";
+			this.button_installed_remove.UseVisualStyleBackColor = true;
+			this.button_installed_remove.Click += new System.EventHandler(this.button_installed_remove_Click);
+			// 
+			// listBox_installed
+			// 
+			this.listBox_installed.FormattingEnabled = true;
+			this.listBox_installed.Location = new System.Drawing.Point(8, 48);
+			this.listBox_installed.Name = "listBox_installed";
+			this.listBox_installed.Size = new System.Drawing.Size(402, 342);
+			this.listBox_installed.TabIndex = 3;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Location = new System.Drawing.Point(0, 0);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(439, 31);
+			this.label3.TabIndex = 2;
+			this.label3.Text = "PlateUp Mod Manager - Installed";
+			// 
+			// panel_search
+			// 
+			this.panel_search.Controls.Add(this.label4);
+			this.panel_search.Location = new System.Drawing.Point(852, 465);
+			this.panel_search.Name = "panel_search";
+			this.panel_search.Size = new System.Drawing.Size(776, 397);
+			this.panel_search.TabIndex = 6;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(0, 0);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(420, 31);
+			this.label4.TabIndex = 3;
+			this.label4.Text = "PlateUp Mod Manager - Search";
 			// 
 			// button1
 			// 
@@ -242,5 +264,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ListBox listBox_installed;
+        private System.Windows.Forms.Button button_installed_remove;
     }
 }
