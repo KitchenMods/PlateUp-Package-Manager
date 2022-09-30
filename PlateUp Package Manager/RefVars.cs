@@ -56,6 +56,8 @@ namespace PlateUp_Package_Manager
 
 		public static void Load()
 		{
+			if (!File.Exists(RefVars.settingsFilePath))
+				return;
 			Dictionary<string, object> settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(RefVars.settingsFilePath));
 			Settings = settings;
 		}

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using Newtonsoft.Json;
+using PlateUp_Package_Manager;
 
 namespace PlateUp_Package_Manager
 {
@@ -20,6 +21,8 @@ namespace PlateUp_Package_Manager
 	public partial class MainForm : Form
 	{
 		private Dictionary<string, string> installedPackagesListBoxKey = new Dictionary<string, string>();
+		private Dictionary<string, string> installedReposListBoxKey = new Dictionary<string, string>();
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -37,9 +40,10 @@ namespace PlateUp_Package_Manager
 
 		private void Setup()
 		{
-			if (!File.Exists(RefVars.installedPackagesFilePath))
-				return;
-			PackageManager.LoadInstalledPackages();
+			if (File.Exists(RefVars.installedPackagesFilePath))
+				PackageManager.LoadInstalledPackages();
+			if (File.Exists(RefVars.installedReposFilePath))
+				RepoManager.LoadInstalledRepos();
 
 			//PackageManager.AddInstalledPackage("modid", new PlateUpPackage("modid", "Mod Name", "1.0.0", "Some cool words", "ME", "http something?", new Dictionary<string, string> { { "sometext.txt", "somepath" } }));
 		}
@@ -70,6 +74,15 @@ namespace PlateUp_Package_Manager
 		private void button_repositories_Click(object sender, EventArgs e)
 		{
 			SetActivePanel(panel_repositories);
+			listBox_installedrepos.Items.Clear();
+			if (RepoManager.GetInstalledRepos() != null)
+			{
+				foreach (string key in RepoManager.GetInstalledRepos().Keys)
+				{
+					listBox_installedrepos.Items.Add(RepoManager.GetInstalledRepos()[key].RepoName);
+					installedReposListBoxKey.Add(RepoManager.GetInstalledRepos()[key].RepoName, key);
+				}
+			}
 		}
 
 
@@ -105,6 +118,17 @@ namespace PlateUp_Package_Manager
 			{
 				string key = installedPackagesListBoxKey[listBox_installed.SelectedItem.ToString()];
 				PackageManager.UninstallPackage(PackageManager.GetInstalledPackage(key));
+			}
+		}
+
+		private void button_addrepo_Click(object sender, EventArgs e)
+		{
+			string repoURL = textBox_addrepo.Text;
+
+			if (RepoManager.IsRepoValid(repoURL))
+			{
+				PlateUpRepo repo = RepoManager.GetRemoteRepoInfo(repoURL);
+				RepoManager.AddInstalledRepo(repo);
 			}
 		}
 	}
@@ -167,6 +191,64 @@ namespace PlateUp_Package_Manager
 			RemoveInstalledPackage(package.PackageID);
 			SaveInstalledPackages();
 		}
+	}
+}
+
+public class RepoManager
+{
+
+	private static Dictionary<string, PlateUpRepo> installedRepos = new Dictionary<string, PlateUpRepo>();
+
+	/*
+	 * Local Managment
+	 */
+	public static void LoadInstalledRepos()
+	{
+		SetInstalledRepos(JsonConvert.DeserializeObject<Dictionary<string, PlateUpRepo>>(File.ReadAllText(RefVars.installedReposFilePath)));
+	}
+	public static void SaveInstalledRepos()
+	{
+		File.WriteAllText(RefVars.installedReposFilePath, JsonConvert.SerializeObject(installedRepos));
+	}
+	public static Dictionary<string, PlateUpRepo> GetInstalledRepos()
+	{
+		return installedRepos;
+	}
+	public static void SetInstalledRepos(Dictionary<string, PlateUpRepo> installedReposList)
+	{
+		installedRepos = installedReposList;
+	}
+	public static void AddInstalledRepo(PlateUpRepo repo)
+	{
+		installedRepos.Add(repo.RepoURL, repo);
+	}
+
+	public static void RemoveInstalledPackage(string repoURL)
+	{
+		if (installedRepos.ContainsKey(repoURL))
+			installedRepos.Remove(repoURL);
+	}
+
+	public static PlateUpRepo GetInstalledRepo(string repoURL)
+	{
+		if (installedRepos.ContainsKey(repoURL))
+			return installedRepos[repoURL];
+		else
+			return null;
+	}
+
+	/*
+	 * Remote Managment
+	 */
+
+	public static bool IsRepoValid(string repoURL)
+	{
+		return true;
+	}
+
+	public static PlateUpRepo GetRemoteRepoInfo(string repoURL)
+	{
+		return null;
 	}
 }
 

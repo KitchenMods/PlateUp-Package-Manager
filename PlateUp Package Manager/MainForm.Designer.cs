@@ -38,6 +38,7 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.panel_repositories = new System.Windows.Forms.Panel();
+			this.listBox_installedrepos = new System.Windows.Forms.ListBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.panel_installed = new System.Windows.Forms.Panel();
 			this.button_installed_remove = new System.Windows.Forms.Button();
@@ -46,6 +47,8 @@
 			this.panel_search = new System.Windows.Forms.Panel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
+			this.textBox_addrepo = new System.Windows.Forms.TextBox();
+			this.button_addrepo = new System.Windows.Forms.Button();
 			this.panel_home.SuspendLayout();
 			this.panel_repositories.SuspendLayout();
 			this.panel_installed.SuspendLayout();
@@ -135,11 +138,22 @@
 			// 
 			// panel_repositories
 			// 
+			this.panel_repositories.Controls.Add(this.button_addrepo);
+			this.panel_repositories.Controls.Add(this.textBox_addrepo);
+			this.panel_repositories.Controls.Add(this.listBox_installedrepos);
 			this.panel_repositories.Controls.Add(this.label2);
 			this.panel_repositories.Location = new System.Drawing.Point(852, 12);
 			this.panel_repositories.Name = "panel_repositories";
 			this.panel_repositories.Size = new System.Drawing.Size(776, 397);
 			this.panel_repositories.TabIndex = 5;
+			// 
+			// listBox_installedrepos
+			// 
+			this.listBox_installedrepos.FormattingEnabled = true;
+			this.listBox_installedrepos.Location = new System.Drawing.Point(6, 91);
+			this.listBox_installedrepos.Name = "listBox_installedrepos";
+			this.listBox_installedrepos.Size = new System.Drawing.Size(336, 303);
+			this.listBox_installedrepos.TabIndex = 2;
 			// 
 			// label2
 			// 
@@ -218,6 +232,23 @@
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
+			// textBox_addrepo
+			// 
+			this.textBox_addrepo.Location = new System.Drawing.Point(3, 65);
+			this.textBox_addrepo.Name = "textBox_addrepo";
+			this.textBox_addrepo.Size = new System.Drawing.Size(689, 20);
+			this.textBox_addrepo.TabIndex = 3;
+			// 
+			// button_addrepo
+			// 
+			this.button_addrepo.Location = new System.Drawing.Point(698, 62);
+			this.button_addrepo.Name = "button_addrepo";
+			this.button_addrepo.Size = new System.Drawing.Size(75, 23);
+			this.button_addrepo.TabIndex = 4;
+			this.button_addrepo.Text = "button2";
+			this.button_addrepo.UseVisualStyleBackColor = true;
+			this.button_addrepo.Click += new System.EventHandler(this.button_addrepo_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -266,5 +297,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListBox listBox_installed;
         private System.Windows.Forms.Button button_installed_remove;
+        private System.Windows.Forms.ListBox listBox_installedrepos;
+        private System.Windows.Forms.Button button_addrepo;
+        private System.Windows.Forms.TextBox textBox_addrepo;
     }
 }
