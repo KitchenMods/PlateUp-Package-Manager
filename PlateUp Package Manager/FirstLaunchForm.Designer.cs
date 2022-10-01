@@ -28,14 +28,15 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FirstLaunchForm));
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.button2 = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.label_messages = new System.Windows.Forms.Label();
 			this.button_next = new System.Windows.Forms.Button();
+			this.label_messages = new System.Windows.Forms.Label();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.label3 = new System.Windows.Forms.Label();
 			this.panel1.SuspendLayout();
@@ -97,16 +98,6 @@
 			this.panel1.Size = new System.Drawing.Size(776, 100);
 			this.panel1.TabIndex = 6;
 			// 
-			// label_messages
-			// 
-			this.label_messages.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label_messages.Location = new System.Drawing.Point(3, 13);
-			this.label_messages.Name = "label_messages";
-			this.label_messages.Size = new System.Drawing.Size(770, 37);
-			this.label_messages.TabIndex = 0;
-			this.label_messages.Text = "Hey there! It looks like you\'re new around here.";
-			this.label_messages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
 			// button_next
 			// 
 			this.button_next.BackColor = System.Drawing.Color.Transparent;
@@ -118,6 +109,16 @@
 			this.button_next.Text = ">";
 			this.button_next.UseVisualStyleBackColor = false;
 			this.button_next.Click += new System.EventHandler(this.button_next_Click);
+			// 
+			// label_messages
+			// 
+			this.label_messages.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label_messages.Location = new System.Drawing.Point(3, 13);
+			this.label_messages.Name = "label_messages";
+			this.label_messages.Size = new System.Drawing.Size(770, 37);
+			this.label_messages.TabIndex = 0;
+			this.label_messages.Text = "Hey there! It looks like you\'re new around here.";
+			this.label_messages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// panel2
 			// 
@@ -148,6 +149,7 @@
 			this.Controls.Add(this.panel2);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.label1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "FirstLaunchForm";
 			this.Text = "PlateUp Mod Manager";
 			this.Load += new System.EventHandler(this.FirstLaunchForm_Load);

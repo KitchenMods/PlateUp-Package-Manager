@@ -126,6 +126,7 @@
 			this.Controls.Add(this.textBox_value);
 			this.Controls.Add(this.textBox_key);
 			this.Controls.Add(this.listBox1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Settings";
 			this.Text = "Settings";
 			this.Load += new System.EventHandler(this.Settings_Load);

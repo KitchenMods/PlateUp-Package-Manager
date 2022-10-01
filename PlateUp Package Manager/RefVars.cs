@@ -15,8 +15,9 @@ namespace PlateUp_Package_Manager
 		public static string softwareVersion = "0.2.0";
 
 		
-		private static string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/";
+		public static string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/";
 		public static string packageManagerPath = applicationDataPath + "PlateUp Package Manager/";
+		public static string packageManagerTempPath = packageManagerPath + "Temp/";
 
 		public static string settingsFilePath = packageManagerPath + "settings.json";
 		public static string installedPackagesFilePath = packageManagerPath + "installedPackages.json";
