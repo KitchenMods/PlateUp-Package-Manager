@@ -748,4 +748,26 @@ namespace PlateUp_Package_Manager
 				MainForm.SetMLProgress(e.ProgressPercentage);
 		}
 	}
+
+	public class UpdateManager
+	{
+		private static WebClient webClient = null;
+		public static void Update()
+		{
+			if (webClient != null)
+				return;
+			webClient = new WebClient();
+			webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+			webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(OnProgessChange);
+			webClient.DownloadFileAsync(new Uri("http://plateup.starfluxgames.com/Manager/update.zip"), Application.StartupPath + "/update.zip");
+		}
+		private static void Completed(object sender, AsyncCompletedEventArgs e)
+		{
+			Application.Exit();
+		}
+
+		private static void OnProgessChange(object sender, ProgressChangedEventArgs e)
+		{
+		}
+	}
 }

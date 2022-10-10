@@ -76,5 +76,18 @@ namespace PlateUp_Package_Manager
 		{
 			this.Close();
 		}
-	}
+
+        private void button4_Click(object sender, EventArgs e)
+		{	
+			if (VersionManager.IsCurrentVersionOutdated())
+			{
+				DialogResult dialogResult = MessageBox.Show("We've found an update! Do you want to install it?\n\n Once the update is downloaded, Manager will close.", "Manager Update!", MessageBoxButtons.YesNo);
+				if (dialogResult == DialogResult.Yes)
+				{
+					UpdateManager.Update();
+				}
+			}
+			
+        }
+    }
 }

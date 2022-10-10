@@ -7,14 +7,15 @@ using System.IO;
 using System.ComponentModel.Design;
 using Newtonsoft.Json;
 using System.Windows.Forms;
+using System.Net;
+using Semver;
+using System.Text.RegularExpressions;
 
 namespace PlateUp_Package_Manager
 {
 	public class RefVars
 	{
-		public static string softwareVersion = "0.2.0";
 
-		
 		public static string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/";
 		public static string packageManagerPath = applicationDataPath + "PlateUp Package Manager/";
 		public static string packageManagerTempPath = packageManagerPath + "Temp/";
@@ -37,7 +38,8 @@ namespace PlateUp_Package_Manager
 
 		public static void UniversalOnFormLoad(Form form)
 		{
-			form.Text = form.Text + " v" + softwareVersion;
+			form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch;
+
 		}
 	}
 
@@ -88,6 +90,66 @@ namespace PlateUp_Package_Manager
 		public static Dictionary<string, object> GetAllSettings()
 		{
 			return Settings;
+		}
+	}
+
+	public class VersionManager
+	{
+		private static Regex pattern = new Regex(@"([0-9])\.([0-9])\.([0-9])");
+
+		private static SemVersion LatestVersion = null;
+		private static SemVersion version = new SemVersion(0, 3, 0);
+
+		public static SemVersion GetLatestVersion()
+		{
+			if (LatestVersion != null)
+				return LatestVersion;
+
+			return GetVersionFromString(GetHTMLFromURL("http://plateup.starfluxgames.com/Manager/LatestVersion.txt"));
+		}
+
+		public static SemVersion GetCurrentVersion()
+		{
+			return version;
+		}
+
+		public static bool IsCurrentVersionOutdated()
+		{
+			if (SemVersion.CompareSortOrder(VersionManager.GetLatestVersion(), GetCurrentVersion()) >= 1)
+				return true;
+			else
+				return false;
+		}
+
+		private static SemVersion GetVersionFromString(string version)
+		{
+			try
+			{
+				Match match = Regex.Match(version, pattern.ToString());
+				if (match.Success == false)
+					throw new Exception("Failed to parse game version from version string.");
+				return new SemVersion(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value));
+			}
+			catch
+			{
+				return GetCurrentVersion();
+			}
+		}
+
+		private static string GetHTMLFromURL(string url)
+		{
+			using (WebClient web1 = new WebClient())
+			{
+				try
+				{
+					string data = web1.DownloadString(url);
+					return data;
+				}
+				catch
+				{
+					return "";
+				}
+			}
 		}
 	}
 }
