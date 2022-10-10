@@ -39,6 +39,22 @@ namespace PlateUp_Package_Manager
 			SetUpPanels();
 			SetActivePanel(panel_home);
 
+			if (Directory.Exists(SettingsManager.Get<string>("plateupfolder") + "/BepInEx"))
+			{
+				DialogResult dialogResult = MessageBox.Show("We've detected BepInEx is already installed in PlateUp, this WILL cause issues with MelonLoader mods.\nDo you want to uninstall BepInEx?\n\nIf you don't uninstall BepInEx, this application will close.", "WARNING!", MessageBoxButtons.YesNo);
+				if (dialogResult == DialogResult.Yes)
+				{
+					ForceDeleteDir(SettingsManager.Get<string>("plateupfolder") + "/BepInEx", true);
+					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/winhttp.dll");
+					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/doorstop_config.ini");
+					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/changelog.txt");
+				}
+				else
+				{
+					Application.Exit();
+				}
+			}
+
 			if (Directory.Exists(RefVars.applicationDataPath + "/PlateUpModManager"))
 			{
 				DialogResult dialogResult = MessageBox.Show("We've detected another PlateUp manager, did you want to remove this?", "Another Manager?", MessageBoxButtons.YesNo);
