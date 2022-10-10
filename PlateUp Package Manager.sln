@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlateUp Package Manager", "PlateUp Package Manager\PlateUp Package Manager.csproj", "{B4BF7F43-F99F-4D97-87D7-A1211BCA422A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher", "Launcher\Launcher.csproj", "{E3DE37F6-6B0E-4CFA-BBFA-A3CD43F18992}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B4BF7F43-F99F-4D97-87D7-A1211BCA422A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4BF7F43-F99F-4D97-87D7-A1211BCA422A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4BF7F43-F99F-4D97-87D7-A1211BCA422A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3DE37F6-6B0E-4CFA-BBFA-A3CD43F18992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3DE37F6-6B0E-4CFA-BBFA-A3CD43F18992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3DE37F6-6B0E-4CFA-BBFA-A3CD43F18992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3DE37F6-6B0E-4CFA-BBFA-A3CD43F18992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
