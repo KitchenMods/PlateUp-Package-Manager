@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace PlateUp_Package_Manager
 {
@@ -89,5 +90,61 @@ namespace PlateUp_Package_Manager
 			}
 			
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+			string[] allfiles = Directory.GetFiles("C:\\Users\\Pilch\\Downloads\\MelonLoader.x64\\", "*.*", SearchOption.AllDirectories);
+			List<string> strings = new List<string>();
+			foreach (string x in allfiles)
+				strings.Add("\""+x.Replace("C:\\Users\\Pilch\\Downloads\\MelonLoader.x64\\", "")+"\",");
+			File.WriteAllLines(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/tt.log", strings.ToArray());
+			List<string> check = new List<string> { "",
+			};
+			List<string> log = new List<string>();
+			log.Add("-----Verifying MelonLoader Install-----");
+			List<string> checkLogs;
+			bool isMLValid = MelonLoaderInstaller.VerifyMelonLoaderInstall(check, out checkLogs);
+			foreach (string x in checkLogs)
+				log.Add(x);
+
+			if (isMLValid)
+				log.Add("-----MelonLoader Valid-----");
+			else
+				log.Add("-----MelonLoader Invalid-----");
+			log.Add("");
+			log.Add("");
+			log.Add("");
+
+			if (SettingsManager.Get<string>("plateupfolder") != "")
+			{
+				string pup = SettingsManager.Get<string>("plateupfolder");
+				log.Add("-----Mods Installed-----");
+				log.Add("");
+				if (Directory.Exists(pup + "/Mods"))
+				{
+					string[] files = Directory.GetFiles(pup + "/Mods");
+					foreach (string x in files)
+					{
+						log.Add(x);
+					}
+				}
+				log.Add("");
+				log.Add("");
+				log.Add("");
+				log.Add("-----StreamingAssets Installed-----");
+				log.Add("");
+				if (Directory.Exists(pup + "/PlateUp_Data/StreamingAssets"))
+				{
+					string[] files = Directory.GetFiles(pup + "/PlateUp_Data/StreamingAssets");
+					foreach (string x in files)
+					{
+						log.Add(x);
+					}
+				}
+			}
+
+			File.WriteAllLines(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Debug.log", log.ToArray());
+			MessageBox.Show("Debug Log Generated");
+		}
     }
 }

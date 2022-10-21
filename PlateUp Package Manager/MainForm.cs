@@ -717,6 +717,29 @@ namespace PlateUp_Package_Manager
 	{
 		private static WebClient webClient = null;
 		private static MainForm MainForm;
+		public static bool VerifyMelonLoaderInstall(List<string> filesToCheck, out List<string> checkLogs)
+		{
+			bool result = true;
+			string pup = "";
+			checkLogs = new List<string>();
+			if (SettingsManager.Get<string>("plateupfolder") == "") // Does PlateUpFolder Exist
+				result = false;
+			else
+				pup = SettingsManager.Get<string>("plateupfolder");
+
+			foreach (string file in filesToCheck)
+			{
+				if (File.Exists(pup + "/" + file))
+					checkLogs.Add("Valid: " + pup + "/" + file);
+				else
+				{
+					checkLogs.Add("Invalid: " + pup + "/" + file);
+					result = false;
+				}
+			}
+
+			return result;
+		}
 		public static void installMelonLoader(MainForm mainForm = null)
 		{
 			MainForm = mainForm;
