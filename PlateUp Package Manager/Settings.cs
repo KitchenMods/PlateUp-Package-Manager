@@ -138,6 +138,17 @@ namespace PlateUp_Package_Manager
 				}
 			}
 
+			if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + "Low/It's Happening/PlateUp/Player.log"))
+			{
+				string[] plateuplogs = File.ReadAllLines(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + "Low/It's Happening/PlateUp/Player.log");
+				log.Add("");
+				log.Add("");
+				log.Add("");
+				log.Add("-----PlateUp Logs-----");
+				foreach (string x in plateuplogs)
+					log.Add(x);
+			}
+
 			File.WriteAllLines(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Debug.log", log.ToArray());
 			MessageBox.Show("Debug Log Generated");
 		}
