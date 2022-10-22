@@ -30,6 +30,13 @@ namespace PlateUp_Package_Manager
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
+			//Package c = new Package("someid","somename","somedesc","someuath","somever","someurl", new Dictionary<string, string> { { "somepath" , "somefile"} });
+			//File.WriteAllText("c.json",JsonConvert.SerializeObject(c));
+
+			Package p = JsonToPackage(File.ReadAllText("c.json"));
+
+			Console.WriteLine(p.Name);
+
 			this.Size = new Size(816, 505);
 			this.MaximumSize = new Size(816, 505);
 			this.MinimumSize = new Size(816, 505);
@@ -82,6 +89,17 @@ namespace PlateUp_Package_Manager
 					MelonLoaderInstaller.installMelonLoader(this);
 				}
 			}
+		}
+
+		public Package JsonToPackage(string json)
+		{
+			Package package = JsonConvert.DeserializeObject<Package>(json);
+			return package;
+		}
+
+		public string PackageToJson(Package package)
+		{
+			return JsonConvert.SerializeObject(package);
 		}
 
 		public void RefreshMLInstallState()
@@ -676,6 +694,13 @@ namespace PlateUp_Package_Manager
 		}
 	}
 
+	public class PackageDependency
+	{
+		public string ID { get; set; }
+		public string Author { get; set; }
+		public string Version { get; set; }
+	}
+
 	public class Package
 	{
 		public string ID { get; set; }
@@ -684,6 +709,7 @@ namespace PlateUp_Package_Manager
 		public string Author { get; set; }
 		public string Version { get; set; }
 		public string URL { get; set; }
+		public List<string> Depends = new List<string>();
 		public Dictionary<string, string> FilePaths { get; set; }
 
 		public Package(string id, string name, string description, string author, string version, string url, Dictionary<string, string> filePaths)
