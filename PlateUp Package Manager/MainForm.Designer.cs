@@ -49,6 +49,7 @@
 			this.textBox_addrepo = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.panel_installed = new System.Windows.Forms.Panel();
+			this.button_toggleMod = new System.Windows.Forms.Button();
 			this.listView_installed = new System.Windows.Forms.ListView();
 			this.label_selectedInstalledPackageInformation = new System.Windows.Forms.Label();
 			this.button_manuallInstall = new System.Windows.Forms.Button();
@@ -270,6 +271,7 @@
 			// 
 			// panel_installed
 			// 
+			this.panel_installed.Controls.Add(this.button_toggleMod);
 			this.panel_installed.Controls.Add(this.listView_installed);
 			this.panel_installed.Controls.Add(this.label_selectedInstalledPackageInformation);
 			this.panel_installed.Controls.Add(this.button_manuallInstall);
@@ -279,6 +281,16 @@
 			this.panel_installed.Name = "panel_installed";
 			this.panel_installed.Size = new System.Drawing.Size(776, 397);
 			this.panel_installed.TabIndex = 6;
+			// 
+			// button_toggleMod
+			// 
+			this.button_toggleMod.Location = new System.Drawing.Point(419, 309);
+			this.button_toggleMod.Name = "button_toggleMod";
+			this.button_toggleMod.Size = new System.Drawing.Size(75, 23);
+			this.button_toggleMod.TabIndex = 8;
+			this.button_toggleMod.Text = "Toggle";
+			this.button_toggleMod.UseVisualStyleBackColor = true;
+			this.button_toggleMod.Click += new System.EventHandler(this.button_toggleMod_Click);
 			// 
 			// listView_installed
 			// 
@@ -518,5 +530,6 @@
 		private System.Windows.Forms.Button button_installML;
 		private System.Windows.Forms.Button button_uninstallML;
 		private System.Windows.Forms.ProgressBar progressBar2;
-	}
+        private System.Windows.Forms.Button button_toggleMod;
+    }
 }

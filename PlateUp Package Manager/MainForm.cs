@@ -22,6 +22,7 @@ namespace PlateUp_Package_Manager
 		private Dictionary<string, Package> installedPackagesListBoxKey = new Dictionary<string, Package>();
 		private Dictionary<string, Repository> installedReposListBoxKey = new Dictionary<string, Repository>();
 		private Dictionary<string, Package> searchedPackagesListBoxKey = new Dictionary<string, Package>();
+		private Dictionary<string, Package> installedPackages = new Dictionary<string, Package>();
 
 		public MainForm()
 		{
@@ -30,13 +31,6 @@ namespace PlateUp_Package_Manager
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			//Package c = new Package("someid","somename","somedesc","someuath","somever","someurl", new Dictionary<string, string> { { "somepath" , "somefile"} });
-			//File.WriteAllText("c.json",JsonConvert.SerializeObject(c));
-
-			Package p = JsonToPackage(File.ReadAllText("c.json"));
-
-			Console.WriteLine(p.Name);
-
 			this.Size = new Size(816, 505);
 			this.MaximumSize = new Size(816, 505);
 			this.MinimumSize = new Size(816, 505);
@@ -48,17 +42,13 @@ namespace PlateUp_Package_Manager
 
 			if (Directory.Exists(SettingsManager.Get<string>("plateupfolder") + "/BepInEx"))
 			{
-				DialogResult dialogResult = MessageBox.Show("We've detected BepInEx is already installed in PlateUp, this WILL cause issues with MelonLoader mods.\nDo you want to uninstall BepInEx?\n\nIf you don't uninstall BepInEx, this application will close.", "WARNING!", MessageBoxButtons.YesNo);
+				DialogResult dialogResult = MessageBox.Show("We've detected BepInEx is already installed in PlateUp, this WILL cause issues with MelonLoader mods.\nDo you want to uninstall BepInEx?\n\nIf you don't uninstall BepInEx, you may encounter unforseen problems.", "WARNING!", MessageBoxButtons.YesNo);
 				if (dialogResult == DialogResult.Yes)
 				{
 					ForceDeleteDir(SettingsManager.Get<string>("plateupfolder") + "/BepInEx", true);
 					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/winhttp.dll");
 					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/doorstop_config.ini");
 					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/changelog.txt");
-				}
-				else
-				{
-					Application.Exit();
 				}
 			}
 
@@ -205,17 +195,22 @@ namespace PlateUp_Package_Manager
 			}
 		}
 
-		private void RefreshInstalledPackagesPage()
+		public void RefreshInstalledPackagesPage()
 		{
 			listView_installed.Clear();
 			listView_installed.Columns.Add("", -2);
 			installedPackagesListBoxKey.Clear();
+			installedPackages.Clear();
+			PackageManager.LoadInstalledPackages();
 			foreach (Package package in PackageManager.GetInstalledPackages())
 			{
 				if (!installedPackagesListBoxKey.ContainsKey(package.Name + " v" + package.Version))
 				{
 					installedPackagesListBoxKey.Add(package.Name + " v" + package.Version, package);
 					ListViewItem item = listView_installed.Items.Add(package.Name + " v" + package.Version);
+					if (!package.IsEnabled)
+						item.ForeColor = Color.Red;
+					installedPackages.Add($"{package.Author}.{package.ID}.{package.Version}", package);
 				}
 			}
 		}
@@ -357,6 +352,18 @@ namespace PlateUp_Package_Manager
 			if (listView_search.SelectedItems.Count > 0)
 			{
 				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
+				PackageManager.LoadInstalledPackages();
+				foreach (string hardDepend in package.HardDepends)
+				{
+					if (!installedPackages.ContainsKey(hardDepend))
+					{
+						DialogResult dialogResult = MessageBox.Show($"This package depends on {hardDepend}, which is not installed. Do you want to install anyway?\n\nProceeding to install may cause unforseen game problems.", "WARNING!", MessageBoxButtons.YesNo);
+						if (dialogResult == DialogResult.No)
+						{
+							return;
+						}
+					}
+				}
 				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
 				PackageManager.InstallRemotePackage(downloadPath, package);
 			}
@@ -418,6 +425,20 @@ namespace PlateUp_Package_Manager
 			Log("MelonLoader Uninstalled.");
 			RefreshMLInstallState();
 		}
+
+		private void button_toggleMod_Click(object sender, EventArgs e)
+		{
+			if (listView_installed.SelectedItems.Count > 0)
+			{
+				Package package = installedPackagesListBoxKey[listView_installed.SelectedItems[0].Text];
+				if (package.IsEnabled)
+					PackageManager.DisablePackage(package);
+				else
+					PackageManager.EnablePackage(package);
+				//PackageManager.UninstallPackage();
+				RefreshInstalledPackagesPage();
+			}
+		}
 	}
 
 	public class PackageManager
@@ -447,10 +468,49 @@ namespace PlateUp_Package_Manager
 			}
 
 			Directory.Delete(RefVars.packageManagerTempPath, true);
-
+			package.IsEnabled = true;
 			AddInstalledPackage(package);
 			SaveInstalledPackages();
 			MainForm.Log("Installed package " + package.Name + " v" + package.Version);
+		}
+
+		public static void DisablePackage(Package package)
+		{
+			string pup = SettingsManager.Get<string>("plateupfolder");
+			string disabledMods = pup + "/DisabledMods";
+			if (!Directory.Exists(disabledMods))
+				Directory.CreateDirectory(disabledMods);
+			if (!Directory.Exists(disabledMods + "/" + package.ID))
+				Directory.CreateDirectory(disabledMods + "/" + package.ID);
+
+			foreach (string file in package.FilePaths.Keys)
+			{
+				string path = pup + package.FilePaths[file] + "/" + file;
+				if (File.Exists(path))
+					File.Move(path, disabledMods + "/" + package.ID + "/" + file);
+			}
+			package.IsEnabled = false;
+			SaveInstalledPackages();
+			MainForm.RefreshInstalledPackagesPage();
+		}
+
+		public static void EnablePackage(Package package)
+		{
+			string pup = SettingsManager.Get<string>("plateupfolder");
+			string disabledMods = pup + "/DisabledMods";
+
+			foreach (string paths in package.FilePaths.Values)
+			{
+				RefVars.MakeSureDirectoryExists(SettingsManager.Get<string>("plateupfolder") + "/" + paths);
+			}
+
+			foreach (string file in package.FilePaths.Keys)
+			{
+				File.Move(disabledMods + "/" + package.ID + "/" + file, SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file);
+			}
+			package.IsEnabled = true;
+			SaveInstalledPackages();
+			MainForm.RefreshInstalledPackagesPage();
 		}
 
 		public static void UninstallPackage(Package package)
@@ -694,13 +754,6 @@ namespace PlateUp_Package_Manager
 		}
 	}
 
-	public class PackageDependency
-	{
-		public string ID { get; set; }
-		public string Author { get; set; }
-		public string Version { get; set; }
-	}
-
 	public class Package
 	{
 		public string ID { get; set; }
@@ -709,7 +762,10 @@ namespace PlateUp_Package_Manager
 		public string Author { get; set; }
 		public string Version { get; set; }
 		public string URL { get; set; }
-		public List<string> Depends = new List<string>();
+		public bool IsEnabled{ get; set; }
+
+		public List<string> HardDepends = new List<string>();
+		public List<string> SoftDepends = new List<string>();
 		public Dictionary<string, string> FilePaths { get; set; }
 
 		public Package(string id, string name, string description, string author, string version, string url, Dictionary<string, string> filePaths)
