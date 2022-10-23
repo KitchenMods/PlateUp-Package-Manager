@@ -210,10 +210,9 @@
 			// 
 			// label_selectedInstalledRepoInformation
 			// 
-			this.label_selectedInstalledRepoInformation.AutoSize = true;
 			this.label_selectedInstalledRepoInformation.Location = new System.Drawing.Point(414, 91);
 			this.label_selectedInstalledRepoInformation.Name = "label_selectedInstalledRepoInformation";
-			this.label_selectedInstalledRepoInformation.Size = new System.Drawing.Size(192, 13);
+			this.label_selectedInstalledRepoInformation.Size = new System.Drawing.Size(278, 292);
 			this.label_selectedInstalledRepoInformation.TabIndex = 8;
 			this.label_selectedInstalledRepoInformation.Text = "label_selectedInstalledRepoInformation";
 			// 
@@ -308,10 +307,9 @@
 			// 
 			// label_selectedInstalledPackageInformation
 			// 
-			this.label_selectedInstalledPackageInformation.AutoSize = true;
 			this.label_selectedInstalledPackageInformation.Location = new System.Drawing.Point(416, 48);
 			this.label_selectedInstalledPackageInformation.Name = "label_selectedInstalledPackageInformation";
-			this.label_selectedInstalledPackageInformation.Size = new System.Drawing.Size(209, 13);
+			this.label_selectedInstalledPackageInformation.Size = new System.Drawing.Size(350, 258);
 			this.label_selectedInstalledPackageInformation.TabIndex = 6;
 			this.label_selectedInstalledPackageInformation.Text = "label_selectedInstalledPackageInformation";
 			// 
@@ -398,10 +396,9 @@
 			// 
 			// label_selectedSearchPackageInformation
 			// 
-			this.label_selectedSearchPackageInformation.AutoSize = true;
 			this.label_selectedSearchPackageInformation.Location = new System.Drawing.Point(414, 98);
 			this.label_selectedSearchPackageInformation.Name = "label_selectedSearchPackageInformation";
-			this.label_selectedSearchPackageInformation.Size = new System.Drawing.Size(204, 13);
+			this.label_selectedSearchPackageInformation.Size = new System.Drawing.Size(359, 208);
 			this.label_selectedSearchPackageInformation.TabIndex = 8;
 			this.label_selectedSearchPackageInformation.Text = "label_selectedSearchPackageInformation";
 			// 

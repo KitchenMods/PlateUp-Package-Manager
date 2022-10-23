@@ -13,7 +13,8 @@ using PlateUp_Package_Manager;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO.Compression;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Text.RegularExpressions;
+using Semver;
 
 namespace PlateUp_Package_Manager
 {
@@ -31,6 +32,11 @@ namespace PlateUp_Package_Manager
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
+			SemVersion x = new SemVersion(1, 0, 5);
+			SemVersion y = new SemVersion(1, 0, 77);
+
+			Console.WriteLine(SemVersion.CompareSortOrder(y, x));
+
 			this.Size = new Size(816, 505);
 			this.MaximumSize = new Size(816, 505);
 			this.MinimumSize = new Size(816, 505);
@@ -201,6 +207,7 @@ namespace PlateUp_Package_Manager
 			listView_installed.Columns.Add("", -2);
 			installedPackagesListBoxKey.Clear();
 			installedPackages.Clear();
+			label_selectedInstalledPackageInformation.Text = "";
 			PackageManager.LoadInstalledPackages();
 			foreach (Package package in PackageManager.GetInstalledPackages())
 			{
@@ -210,7 +217,7 @@ namespace PlateUp_Package_Manager
 					ListViewItem item = listView_installed.Items.Add(package.Name + " v" + package.Version);
 					if (!package.IsEnabled)
 						item.ForeColor = Color.Red;
-					installedPackages.Add($"{package.Author}.{package.ID}.{package.Version}", package);
+					installedPackages.Add($"{package.Author},{package.ID},{package.Version}", package);
 				}
 			}
 		}
@@ -235,6 +242,7 @@ namespace PlateUp_Package_Manager
 			listView_search.Clear();
 			listView_search.Columns.Add("", -2);
 			searchedPackagesListBoxKey.Clear();
+			label_selectedSearchPackageInformation.Text = "";
 			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
 			{
 				foreach (Package package in repo.Packages)
@@ -265,7 +273,11 @@ namespace PlateUp_Package_Manager
 			if (listView_installed.SelectedItems.Count > 0)
 			{
 				Package package = installedPackagesListBoxKey[listView_installed.SelectedItems[0].Text];
-				label_selectedInstalledPackageInformation.Text = "Name: " + package.Name + "\nVersion: " + package.Version + "\nAuthor: " + package.Author + "\nDescription: " + package.Description;
+				label_selectedInstalledPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
+				foreach (string depends in package.HardDepends)
+				{
+					label_selectedInstalledPackageInformation.Text = label_selectedInstalledPackageInformation.Text + "\n" + depends;
+				}
 				button_installed_remove.Enabled = true;
 			}
 			else
@@ -293,6 +305,7 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_repos_installedrepos.SelectedItems.Count > 0)
 			{
+				label_selectedInstalledRepoInformation.Text = "";
 				RepositoryManager.RemoveInstalledRepository(installedReposListBoxKey[listView_repos_installedrepos.SelectedItems[0].Text]);
 				RefreshInstalledRepositories();
 			}
@@ -303,7 +316,7 @@ namespace PlateUp_Package_Manager
 			if (listView_repos_installedrepos.SelectedItems.Count > 0)
 			{
 				Repository repo= installedReposListBoxKey[listView_repos_installedrepos.SelectedItems[0].Text];
-				label_selectedInstalledRepoInformation.Text = "Name: " + repo.Name + "\nDescription: " + repo.Description + "\nURL: " + repo.URL;
+				label_selectedInstalledRepoInformation.Text = "Name: " + repo.Name + "\n\nDescription: " + repo.Description + "\n\nURL: " + repo.URL;
 				button_repos_remove.Enabled = true;
 			}
 			else
@@ -337,7 +350,11 @@ namespace PlateUp_Package_Manager
 			if (listView_search.SelectedItems.Count > 0)
 			{
 				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
-				label_selectedSearchPackageInformation.Text = "Name: " + package.Name + "\nVersion: " + package.Version + "\nAuthor: " + package.Author + "\nDescription: " + package.Description;
+				label_selectedSearchPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
+				foreach (string depends in package.HardDepends)
+				{
+					label_selectedSearchPackageInformation.Text = label_selectedSearchPackageInformation.Text + "\n" + depends;
+				}
 				button_searchInstall.Enabled = true;
 			}
 			else
@@ -353,6 +370,57 @@ namespace PlateUp_Package_Manager
 			{
 				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
 				PackageManager.LoadInstalledPackages();
+				string[] installedKeys = installedPackages.Keys.ToArray();
+				List<Match> regexMatches = new List<Match>();
+
+				foreach (string x in installedKeys)
+				{
+					Regex pattern = new Regex(@"([A-Za-z0-9]+),([A-Za-z0-9]+),([0-9]+)\.([0-9]+)\.([0-9]+)");
+					Match match = Regex.Match(x, pattern.ToString());
+					if (match.Success)
+						regexMatches.Add(match);
+				}
+				foreach (string hardDepend in package.HardDepends)
+				{
+					Regex pattern = new Regex(@"([A-Za-z0-9]+),([A-Za-z0-9]+),([0-9]+)\.([0-9]+)\.([0-9]+)");
+					Match match = Regex.Match(hardDepend, pattern.ToString());
+
+					if (match.Success)
+					{
+						bool found = false;
+						foreach (Match regexMatch in regexMatches)
+						{
+							if (regexMatch.Groups[1].Value == match.Groups[1].Value && regexMatch.Groups[2].Value == match.Groups[2].Value)
+							{
+								Match foundVersion = regexMatch;
+								Match requiredVersion = match;
+
+								//Semver Checks
+								SemVersion foundVer = new SemVersion(int.Parse(regexMatch.Groups[3].Value), int.Parse(regexMatch.Groups[4].Value), int.Parse(regexMatch.Groups[5].Value));
+								SemVersion requiredVer = new SemVersion(int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value), int.Parse(match.Groups[5].Value));
+
+								int result = SemVersion.CompareSortOrder(foundVer, requiredVer);
+								if (result >= 0)
+								{
+									found = true;
+									break;
+								}
+							}
+						}
+						if (!found)
+						{
+							Log("Package: " + package.Name + " requires package: " + match.Groups[2].Value + " v" + match.Groups[3].Value +"."+ match.Groups[4].Value + "." + match.Groups[5].Value + " to be installed");
+							return;
+						}
+					}
+					else
+					{
+						Log("Package: " + package.Name + " has an invalid hard depend: " + hardDepend);
+						return;
+					}
+				}
+
+				/*
 				foreach (string hardDepend in package.HardDepends)
 				{
 					if (!installedPackages.ContainsKey(hardDepend))
@@ -364,6 +432,7 @@ namespace PlateUp_Package_Manager
 						}
 					}
 				}
+				*/
 				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
 				PackageManager.InstallRemotePackage(downloadPath, package);
 			}
