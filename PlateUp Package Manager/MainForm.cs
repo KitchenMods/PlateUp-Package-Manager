@@ -370,6 +370,7 @@ namespace PlateUp_Package_Manager
 			{
 				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
 				PackageManager.LoadInstalledPackages();
+				RefreshInstalledPackagesPage();
 				string[] installedKeys = installedPackages.Keys.ToArray();
 				List<Match> regexMatches = new List<Match>();
 
