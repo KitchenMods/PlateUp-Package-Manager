@@ -615,6 +615,8 @@ namespace PlateUp_Package_Manager
 
 		public static void LoadInstalledPackages()
 		{
+			if (!File.Exists(RefVars.installedPackagesFilePath))
+				File.WriteAllText(RefVars.installedPackagesFilePath, JsonConvert.SerializeObject(new List<Package>()));
 			List<Package> installedPackages = JsonConvert.DeserializeObject<List<Package>>(File.ReadAllText(RefVars.installedPackagesFilePath));
 			InstalledPackages = installedPackages;
 		}
