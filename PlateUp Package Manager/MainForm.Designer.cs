@@ -34,13 +34,13 @@
 			this.button_installed = new System.Windows.Forms.Button();
 			this.button_search = new System.Windows.Forms.Button();
 			this.panel_home = new System.Windows.Forms.Panel();
-			this.button_uninstallML = new System.Windows.Forms.Button();
-			this.progressBar2 = new System.Windows.Forms.ProgressBar();
-			this.button_installML = new System.Windows.Forms.Button();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
+			this.button_uninstallML = new System.Windows.Forms.Button();
+			this.progressBar2 = new System.Windows.Forms.ProgressBar();
+			this.button_installML = new System.Windows.Forms.Button();
 			this.panel_repositories = new System.Windows.Forms.Panel();
 			this.label_selectedInstalledRepoInformation = new System.Windows.Forms.Label();
 			this.listView_repos_installedrepos = new System.Windows.Forms.ListView();
@@ -66,6 +66,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.button_settings = new System.Windows.Forms.Button();
 			this.label_logger = new System.Windows.Forms.Label();
+			this.button1 = new System.Windows.Forms.Button();
 			this.panel_home.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel_repositories.SuspendLayout();
@@ -115,9 +116,7 @@
 			// 
 			// panel_home
 			// 
-			this.panel_home.Controls.Add(this.button_uninstallML);
-			this.panel_home.Controls.Add(this.progressBar2);
-			this.panel_home.Controls.Add(this.button_installML);
+			this.panel_home.Controls.Add(this.button1);
 			this.panel_home.Controls.Add(this.pictureBox1);
 			this.panel_home.Controls.Add(this.label7);
 			this.panel_home.Controls.Add(this.label5);
@@ -126,33 +125,6 @@
 			this.panel_home.Name = "panel_home";
 			this.panel_home.Size = new System.Drawing.Size(776, 397);
 			this.panel_home.TabIndex = 4;
-			// 
-			// button_uninstallML
-			// 
-			this.button_uninstallML.Location = new System.Drawing.Point(648, 343);
-			this.button_uninstallML.Name = "button_uninstallML";
-			this.button_uninstallML.Size = new System.Drawing.Size(118, 23);
-			this.button_uninstallML.TabIndex = 7;
-			this.button_uninstallML.Text = "Uninstall Melonloader";
-			this.button_uninstallML.UseVisualStyleBackColor = true;
-			this.button_uninstallML.Click += new System.EventHandler(this.button_uninstallML_Click);
-			// 
-			// progressBar2
-			// 
-			this.progressBar2.Location = new System.Drawing.Point(524, 372);
-			this.progressBar2.Name = "progressBar2";
-			this.progressBar2.Size = new System.Drawing.Size(242, 11);
-			this.progressBar2.TabIndex = 6;
-			// 
-			// button_installML
-			// 
-			this.button_installML.Location = new System.Drawing.Point(524, 343);
-			this.button_installML.Name = "button_installML";
-			this.button_installML.Size = new System.Drawing.Size(118, 23);
-			this.button_installML.TabIndex = 5;
-			this.button_installML.Text = "Install MelonLoader";
-			this.button_installML.UseVisualStyleBackColor = true;
-			this.button_installML.Click += new System.EventHandler(this.button_installML_Click);
 			// 
 			// pictureBox1
 			// 
@@ -194,6 +166,33 @@
 			this.label1.Size = new System.Drawing.Size(404, 31);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "PlateUp Mod Manager - Home";
+			// 
+			// button_uninstallML
+			// 
+			this.button_uninstallML.Location = new System.Drawing.Point(1510, 415);
+			this.button_uninstallML.Name = "button_uninstallML";
+			this.button_uninstallML.Size = new System.Drawing.Size(118, 23);
+			this.button_uninstallML.TabIndex = 7;
+			this.button_uninstallML.Text = "Uninstall Melonloader";
+			this.button_uninstallML.UseVisualStyleBackColor = true;
+			this.button_uninstallML.Click += new System.EventHandler(this.button_uninstallML_Click);
+			// 
+			// progressBar2
+			// 
+			this.progressBar2.Location = new System.Drawing.Point(1386, 444);
+			this.progressBar2.Name = "progressBar2";
+			this.progressBar2.Size = new System.Drawing.Size(242, 11);
+			this.progressBar2.TabIndex = 6;
+			// 
+			// button_installML
+			// 
+			this.button_installML.Location = new System.Drawing.Point(1386, 415);
+			this.button_installML.Name = "button_installML";
+			this.button_installML.Size = new System.Drawing.Size(118, 23);
+			this.button_installML.TabIndex = 5;
+			this.button_installML.Text = "Install MelonLoader";
+			this.button_installML.UseVisualStyleBackColor = true;
+			this.button_installML.Click += new System.EventHandler(this.button_installML_Click);
 			// 
 			// panel_repositories
 			// 
@@ -456,12 +455,25 @@
 			this.label_logger.TabIndex = 8;
 			this.label_logger.Text = "label_logger";
 			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(691, 360);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 5;
+			this.button1.Text = "Builder";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1703, 906);
+			this.Controls.Add(this.button_uninstallML);
+			this.Controls.Add(this.progressBar2);
 			this.Controls.Add(this.label_logger);
+			this.Controls.Add(this.button_installML);
 			this.Controls.Add(this.button_settings);
 			this.Controls.Add(this.panel_installed);
 			this.Controls.Add(this.panel_search);
@@ -528,5 +540,6 @@
 		private System.Windows.Forms.Button button_uninstallML;
 		private System.Windows.Forms.ProgressBar progressBar2;
         private System.Windows.Forms.Button button_toggleMod;
+        private System.Windows.Forms.Button button1;
     }
 }

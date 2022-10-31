@@ -23,6 +23,8 @@ namespace PlateUp_Package_Manager
 
 		private void Settings_Load(object sender, EventArgs e)
 		{
+			this.MaximumSize = this.Size;
+			this.MinimumSize = this.Size;
 			SetupList();
 		}
 

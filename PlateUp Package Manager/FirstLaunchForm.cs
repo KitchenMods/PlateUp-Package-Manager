@@ -25,6 +25,8 @@ namespace PlateUp_Package_Manager
 			RefVars.MakeSureDirectoryExists(RefVars.packageManagerPath);
 			textBox1.Text = FindPlateUpGame();
 			label_messages.Text = messages[messagesIndex];
+			this.MaximumSize = this.Size;
+			this.MinimumSize = this.Size;
 		}
 
 		private List<string> messages = new List<string> {

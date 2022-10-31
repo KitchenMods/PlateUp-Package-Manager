@@ -32,10 +32,10 @@ namespace PlateUp_Package_Manager
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			SemVersion x = new SemVersion(1, 0, 5);
-			SemVersion y = new SemVersion(1, 0, 77);
 
-			Console.WriteLine(SemVersion.CompareSortOrder(y, x));
+			//string json = PackageManager.CreatePackageJson(@"C:\Users\Pilch\OneDrive\Desktop\MelonLoader");
+			//Console.WriteLine(json);
+			//File.WriteAllText(@"C:\Users\Pilch\OneDrive\Desktop\package.json", json);
 
 			this.Size = new Size(816, 505);
 			this.MaximumSize = new Size(816, 505);
@@ -46,6 +46,7 @@ namespace PlateUp_Package_Manager
 			SetUpPanels();
 			SetActivePanel(panel_home);
 
+			/* Disables BepInEx Support
 			if (Directory.Exists(SettingsManager.Get<string>("plateupfolder") + "/BepInEx"))
 			{
 				DialogResult dialogResult = MessageBox.Show("We've detected BepInEx is already installed in PlateUp, this WILL cause issues with MelonLoader mods.\nDo you want to uninstall BepInEx?\n\nIf you don't uninstall BepInEx, you may encounter unforseen problems.", "WARNING!", MessageBoxButtons.YesNo);
@@ -57,6 +58,7 @@ namespace PlateUp_Package_Manager
 					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/changelog.txt");
 				}
 			}
+			*/
 
 			if (Directory.Exists(RefVars.applicationDataPath + "/PlateUpModManager"))
 			{
@@ -76,6 +78,7 @@ namespace PlateUp_Package_Manager
 				}
 			}
 			
+			/* Forces MelonLoader
 			if (!Directory.Exists(SettingsManager.Get<string>("plateupfolder") + "/MelonLoader"))
 			{
 				//ML not installed
@@ -85,6 +88,7 @@ namespace PlateUp_Package_Manager
 					MelonLoaderInstaller.installMelonLoader(this);
 				}
 			}
+			*/
 		}
 
 		public Package JsonToPackage(string json)
@@ -188,7 +192,6 @@ namespace PlateUp_Package_Manager
 		private void button_settings_Click(object sender, EventArgs e)
 		{
 			Settings settingsMenu = new Settings();
-
 			settingsMenu.Show();
 		}
 
@@ -509,6 +512,12 @@ namespace PlateUp_Package_Manager
 				RefreshInstalledPackagesPage();
 			}
 		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			PackageBuilder packageBuilder = new PackageBuilder();
+			packageBuilder.Show();
+		}
 	}
 
 	public class PackageManager
@@ -520,21 +529,48 @@ namespace PlateUp_Package_Manager
 		 * Package Managment
 		 */
 
+		public static string CreatePackageJson(string path, string id, string name, string description, string author, string version, string url, List<string> hardDepends)
+		{
+			string[] allfiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+			Dictionary<string, string> paths = new Dictionary<string, string>();
+			foreach (var file in allfiles)
+			{
+				string x = file.Replace(path, "");
+				paths.Add(x, Path.GetDirectoryName(x));
+			}
+			Package package = new Package(id, name, description, author, version, url, paths);
+			if (hardDepends != null)
+				package.HardDepends = hardDepends;
+			package.PackageVersion = 1;
+			return JsonConvert.SerializeObject(package);
+		}
+
 		public static void InstallPackage(string path)
 		{
 			RefVars.MakeSureDirectoryExists(RefVars.packageManagerTempPath);
 			ZipFile.ExtractToDirectory(path, RefVars.packageManagerTempPath);
 			Package package = JsonConvert.DeserializeObject<Package>(File.ReadAllText(RefVars.packageManagerTempPath + "PACKAGE.json"));
+
 			MainForm.Log("Installing package " + package.Name + " v" + package.Version + "...");
 
 			foreach (string paths in package.FilePaths.Values)
 			{
 				RefVars.MakeSureDirectoryExists(SettingsManager.Get<string>("plateupfolder") + "/" + paths);
 			}
-
-			foreach (string file in package.FilePaths.Keys)
+			
+			if (package.PackageVersion == 1)
 			{
-				File.Copy(RefVars.packageManagerTempPath + file, SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file, true);
+				foreach (string file in package.FilePaths.Keys)
+				{
+					File.Copy(RefVars.packageManagerTempPath + "\\" + file, SettingsManager.Get<string>("plateupfolder") + "\\" + file);
+				}
+			}
+			else
+			{
+				foreach (string file in package.FilePaths.Keys)
+				{
+					File.Copy(RefVars.packageManagerTempPath + file, SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file, true);
+				}
 			}
 
 			Directory.Delete(RefVars.packageManagerTempPath, true);
@@ -553,11 +589,25 @@ namespace PlateUp_Package_Manager
 			if (!Directory.Exists(disabledMods + "/" + package.ID))
 				Directory.CreateDirectory(disabledMods + "/" + package.ID);
 
-			foreach (string file in package.FilePaths.Keys)
+			if (package.PackageVersion == 1)
 			{
-				string path = pup + package.FilePaths[file] + "/" + file;
-				if (File.Exists(path))
-					File.Move(path, disabledMods + "/" + package.ID + "/" + file);
+				foreach (string file in package.FilePaths.Keys)
+				{
+					string path = pup + "/" + file;
+					if (!Directory.Exists(disabledMods + "/" + package.ID + "/" + package.FilePaths[file]))
+						Directory.CreateDirectory(disabledMods + "/" + package.ID + "/" + package.FilePaths[file]);
+					if (File.Exists(path))
+						File.Move(path, disabledMods + "/" + package.ID + "/" + file);
+				}
+			}
+			else
+			{
+				foreach (string file in package.FilePaths.Keys)
+				{
+					string path = pup + package.FilePaths[file] + "/" + file;
+					if (File.Exists(path))
+						File.Move(path, disabledMods + "/" + package.ID + "/" + file);
+				}
 			}
 			package.IsEnabled = false;
 			SaveInstalledPackages();
@@ -569,14 +619,28 @@ namespace PlateUp_Package_Manager
 			string pup = SettingsManager.Get<string>("plateupfolder");
 			string disabledMods = pup + "/DisabledMods";
 
-			foreach (string paths in package.FilePaths.Values)
+			if (package.PackageVersion == 1)
 			{
-				RefVars.MakeSureDirectoryExists(SettingsManager.Get<string>("plateupfolder") + "/" + paths);
-			}
+				foreach (string file in package.FilePaths.Keys)
+				{
+					if (!Directory.Exists(pup + "/" + package.FilePaths[file]))
+						Directory.CreateDirectory(pup + "/" + package.FilePaths[file]);
 
-			foreach (string file in package.FilePaths.Keys)
+					if (File.Exists(disabledMods + "/" + package.ID + "/" + file))
+						File.Move(disabledMods + "/" + package.ID + "/" + file, pup + "/" + file);
+				}
+			}
+			else
 			{
-				File.Move(disabledMods + "/" + package.ID + "/" + file, SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file);
+				foreach (string paths in package.FilePaths.Values)
+				{
+					RefVars.MakeSureDirectoryExists(SettingsManager.Get<string>("plateupfolder") + "/" + paths);
+				}
+
+				foreach (string file in package.FilePaths.Keys)
+				{
+					File.Move(disabledMods + "/" + package.ID + "/" + file, SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file);
+				}
 			}
 			package.IsEnabled = true;
 			SaveInstalledPackages();
@@ -588,10 +652,21 @@ namespace PlateUp_Package_Manager
 			//Uninstall package files
 
 			MainForm.Log("Uninstalling package " + package.Name + " v" + package.Version + "...");
-			foreach (string file in package.FilePaths.Keys)
+			if (package.PackageVersion == 1)
 			{
-				if (File.Exists(SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file))
-					File.Delete(SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file);
+				foreach (string file in package.FilePaths.Keys)
+				{
+					if (File.Exists(SettingsManager.Get<string>("plateupfolder") + "\\" + file))
+						File.Delete(SettingsManager.Get<string>("plateupfolder") + "\\" + file);
+				}
+			}
+			else
+			{
+				foreach (string file in package.FilePaths.Keys)
+				{
+					if (File.Exists(SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file))
+						File.Delete(SettingsManager.Get<string>("plateupfolder") + package.FilePaths[file] + "/" + file);
+				}
 			}
 
 			RemoveInstalledPackage(package);
@@ -838,6 +913,7 @@ namespace PlateUp_Package_Manager
 
 		public List<string> HardDepends = new List<string>();
 		public List<string> SoftDepends = new List<string>();
+		public int PackageVersion { get; set; }
 		public Dictionary<string, string> FilePaths { get; set; }
 
 		public Package(string id, string name, string description, string author, string version, string url, Dictionary<string, string> filePaths)
