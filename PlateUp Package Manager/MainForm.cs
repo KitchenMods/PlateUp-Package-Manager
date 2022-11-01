@@ -15,6 +15,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Semver;
+using System.Runtime.CompilerServices;
 
 namespace PlateUp_Package_Manager
 {
@@ -23,6 +24,7 @@ namespace PlateUp_Package_Manager
 		private Dictionary<string, Package> installedPackagesListBoxKey = new Dictionary<string, Package>();
 		private Dictionary<string, Repository> installedReposListBoxKey = new Dictionary<string, Repository>();
 		private Dictionary<Package, string> searchedPackagesListBoxKey = new Dictionary<Package, string>();
+		private List<Package> searchedPackagesListBoxIndexes = new List<Package>();
 		//private Dictionary<string, Package> searchedPackagesListBoxKey = new Dictionary<string, Package>();
 		private Dictionary<string, Package> installedPackages = new Dictionary<string, Package>();
 
@@ -254,6 +256,7 @@ namespace PlateUp_Package_Manager
 			listView_search.Clear();
 			listView_search.Columns.Add("", -2);
 			searchedPackagesListBoxKey.Clear();
+			searchedPackagesListBoxIndexes.Clear();
 			label_selectedSearchPackageInformation.Text = "";
 			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
 			{
@@ -262,6 +265,7 @@ namespace PlateUp_Package_Manager
 					if (!PackageManager.IsPackageInstalled(package))
 					{
 						searchedPackagesListBoxKey.Add(package, package.Name + " v" + package.Version);
+						searchedPackagesListBoxIndexes.Add(package);
 						ListViewItem item = listView_search.Items.Add(package.Name + " v" + package.Version);
 					}
 				}
@@ -361,7 +365,8 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
+				//Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
+				Package package = searchedPackagesListBoxIndexes[listView_search.SelectedItems[0].Index];
 				label_selectedSearchPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
 				foreach (string depends in package.HardDepends)
 				{
@@ -380,7 +385,8 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
+				//Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
+				Package package = searchedPackagesListBoxIndexes[listView_search.SelectedItems[0].Index];
 				//Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
 				PackageManager.LoadInstalledPackages();
 				RefreshInstalledPackagesPage();
@@ -633,7 +639,7 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
+				Package package = searchedPackagesListBoxIndexes[listView_search.SelectedItems[0].Index];
 
 				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
 				UpdateInstallButtons(false);
@@ -844,7 +850,7 @@ namespace PlateUp_Package_Manager
 		{
 			foreach (Package pack in InstalledPackages)
 			{
-				if (pack.ID == package.ID && pack.Name == package.Name && pack.Version == package.Version)
+				if (pack.ID == package.ID && pack.Name == package.Name && pack.Version == package.Version && pack.URL == package.URL)
 					return true;
 			}
 			return false;
