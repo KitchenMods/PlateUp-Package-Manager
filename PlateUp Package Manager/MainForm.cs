@@ -22,7 +22,8 @@ namespace PlateUp_Package_Manager
 	{
 		private Dictionary<string, Package> installedPackagesListBoxKey = new Dictionary<string, Package>();
 		private Dictionary<string, Repository> installedReposListBoxKey = new Dictionary<string, Repository>();
-		private Dictionary<string, Package> searchedPackagesListBoxKey = new Dictionary<string, Package>();
+		private Dictionary<Package, string> searchedPackagesListBoxKey = new Dictionary<Package, string>();
+		//private Dictionary<string, Package> searchedPackagesListBoxKey = new Dictionary<string, Package>();
 		private Dictionary<string, Package> installedPackages = new Dictionary<string, Package>();
 
 		public MainForm()
@@ -260,7 +261,7 @@ namespace PlateUp_Package_Manager
 				{
 					if (!PackageManager.IsPackageInstalled(package))
 					{
-						searchedPackagesListBoxKey.Add(package.Name + " v" + package.Version, package);
+						searchedPackagesListBoxKey.Add(package, package.Name + " v" + package.Version);
 						ListViewItem item = listView_search.Items.Add(package.Name + " v" + package.Version);
 					}
 				}
@@ -360,7 +361,7 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
+				Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
 				label_selectedSearchPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
 				foreach (string depends in package.HardDepends)
 				{
@@ -379,7 +380,8 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
+				Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
+				//Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
 				PackageManager.LoadInstalledPackages();
 				RefreshInstalledPackagesPage();
 				string[] installedKeys = installedPackages.Keys.ToArray();
@@ -467,6 +469,32 @@ namespace PlateUp_Package_Manager
 					}
 				}
 				*/
+
+				List<Package> packages = PackageManager.GetInstalledPackages();
+				List<Package> packagesToUninstall = new List<Package>();
+				foreach (Package installedPackage in packages)
+				{
+					if (installedPackage.Author == package.Author && installedPackage.ID == package.ID)
+					{
+						DialogResult dialogResult = MessageBox.Show($"Package: {package.Name} is already installed, would you like to reinstall?", "Package already installed!", MessageBoxButtons.YesNo);
+						if (dialogResult == DialogResult.No)
+						{
+							return;
+						}
+						else
+						{
+							packagesToUninstall.Add(installedPackage);
+						}
+					}
+				}
+
+				if (packagesToUninstall.Count > 0)
+				{
+					foreach (Package installedPackage in packagesToUninstall)
+					{
+						PackageManager.UninstallPackage(installedPackage);
+					}
+				}
 				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
 				UpdateInstallButtons(false);
 				PackageManager.InstallRemotePackage(downloadPath, package);
@@ -478,7 +506,7 @@ namespace PlateUp_Package_Manager
 			string search = textBox_searchField.Text;
 			listView_search.Clear();
 			listView_search.Columns.Add("", -2);
-			foreach (string packagename in searchedPackagesListBoxKey.Keys)
+			foreach (string packagename in searchedPackagesListBoxKey.Values)
 			{
 				if (packagename.Contains(search))
 				{
@@ -605,8 +633,8 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
-				
+				Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
+
 				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
 				UpdateInstallButtons(false);
 				PackageManager.DownloadRemotePackage(downloadPath, package);
@@ -629,8 +657,11 @@ namespace PlateUp_Package_Manager
 			Dictionary<string, string> paths = new Dictionary<string, string>();
 			foreach (var file in allfiles)
 			{
-				string x = file.Replace(path, "");
-				paths.Add(x, Path.GetDirectoryName(x));
+				if (!file.ToLower().Contains("package.json"))
+				{
+					string x = file.Replace(path, "");
+					paths.Add(x, Path.GetDirectoryName(x));
+				}
 			}
 			Package package = new Package(id, name, description, author, version, url, paths);
 			if (hardDepends != null)
@@ -658,7 +689,7 @@ namespace PlateUp_Package_Manager
 			{
 				foreach (string file in package.FilePaths.Keys)
 				{
-					File.Copy(RefVars.packageManagerTempPath + "\\" + file, SettingsManager.Get<string>("plateupfolder") + "\\" + file);
+					File.Copy(RefVars.packageManagerTempPath + "\\" + file, SettingsManager.Get<string>("plateupfolder") + "\\" + file, true);
 				}
 			}
 			else
@@ -744,7 +775,7 @@ namespace PlateUp_Package_Manager
 			MainForm.RefreshInstalledPackagesPage();
 		}
 
-		public static void UninstallPackage(Package package)
+		public static bool UninstallPackage(Package package)
 		{
 			//Uninstall package files
 
@@ -769,6 +800,7 @@ namespace PlateUp_Package_Manager
 			RemoveInstalledPackage(package);
 			SaveInstalledPackages();
 			MainForm.Log("Uninstalled package " + package.Name + " v" + package.Version);
+			return true;
 		}
 
 		/*
