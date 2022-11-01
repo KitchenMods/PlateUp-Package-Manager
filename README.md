@@ -34,6 +34,8 @@ Your `Home` menu contains some basic information about PPM, as well as a couple 
 
 Your `Repositories` menu is where you manage the different Repositories you can download packages from.
 
+Some first party Repositories are `http://plateup.starfluxgames.com/Repo` and `http://plateup.starfluxgames.com/BepInEx`
+
 ### Installed
 
 Your `Installed` menu is where you can manage your installed packages.
