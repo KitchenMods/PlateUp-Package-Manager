@@ -30,11 +30,19 @@ namespace PlateUp_Package_Manager
 			InitializeComponent();
 		}
 
+		public void UpdateInstallButtons(bool enabled)
+		{
+			button_searchInstall.Enabled = enabled;
+			button_toggleMod.Enabled = enabled;
+			button_manuallInstall.Enabled = enabled;
+			button_installed_remove.Enabled = enabled;
+		}
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 
 			//string json = PackageManager.CreatePackageJson(@"C:\Users\Pilch\OneDrive\Desktop\MelonLoader");
 			//Console.WriteLine(json);
+			//string json = JsonConvert.SerializeObject(new Package("someid", "somename", "somedesc", "someauthor", "someversion", "someurl", new Dictionary<string, string> { }));
 			//File.WriteAllText(@"C:\Users\Pilch\OneDrive\Desktop\package.json", json);
 
 			this.Size = new Size(816, 505);
@@ -262,7 +270,7 @@ namespace PlateUp_Package_Manager
 		private void button_manuallInstall_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.Title = "Select PlateUp.exe";
+			dialog.Title = "Select PlateUp Mod";
 			dialog.ShowDialog();
 			if (dialog.FileName != "")
 			{
@@ -384,6 +392,28 @@ namespace PlateUp_Package_Manager
 					if (match.Success)
 						regexMatches.Add(match);
 				}
+				foreach (string incompatable in package.Incompatable)
+				{
+					Regex pattern = new Regex(@"([A-Za-z0-9]+),([A-Za-z0-9]+)");
+					Match match = Regex.Match(incompatable, pattern.ToString());
+					bool found = false;
+					foreach (Match regexMatch in regexMatches)
+					{
+						if (regexMatch.Groups[1].Value == match.Groups[1].Value && regexMatch.Groups[2].Value == match.Groups[2].Value)
+						{
+							found = true;
+							break;
+						}
+					}
+					if (found)
+					{
+						DialogResult dialogResult = MessageBox.Show($"Package: {package.Name} is incompatible with: {match.Groups[1]}.{match.Groups[2]}, Would you like to FORCE install?\n\nForcing the installation may cause unforseen problems.", "Incompatible Package!", MessageBoxButtons.YesNo);
+						if (dialogResult == DialogResult.No)
+						{
+							return;
+						}
+					}
+				}
 				foreach (string hardDepend in package.HardDepends)
 				{
 					Regex pattern = new Regex(@"([A-Za-z0-9]+),([A-Za-z0-9]+),([0-9]+)\.([0-9]+)\.([0-9]+)");
@@ -438,6 +468,7 @@ namespace PlateUp_Package_Manager
 				}
 				*/
 				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
+				UpdateInstallButtons(false);
 				PackageManager.InstallRemotePackage(downloadPath, package);
 			}
 		}
@@ -513,10 +544,61 @@ namespace PlateUp_Package_Manager
 			}
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void button_packageBuilder_Click(object sender, EventArgs e)
 		{
 			PackageBuilder packageBuilder = new PackageBuilder();
 			packageBuilder.Show();
+		}
+
+		private void button_clean_Click(object sender, EventArgs e)
+		{
+			DialogResult dialogResult = MessageBox.Show("Would you like to clean your PlateUp! folder?", "Clean PlateUp?", MessageBoxButtons.YesNo);
+			if (dialogResult == DialogResult.No)
+			{
+				return;
+			}
+			string pup = SettingsManager.Get<string>("plateupfolder");
+			if (pup != "")
+			{
+				if (Directory.Exists(pup))
+				{
+					string[] files = Directory.GetFiles(pup);
+					foreach (string file in files)
+					{
+						string x = file.Replace(pup, "");
+						if (x != "\\lib_burst_generated.pdb"
+							&& x != "\\PlateUp.exe"
+							&& x != "\\UnityCrashHandler64.exe"
+							&& x != "\\UnityPlayer.dll")
+						{
+							File.Delete(file);
+						}
+					}
+
+					string[] dirs = Directory.GetDirectories(pup);
+					foreach (string dir in dirs)
+					{
+						string x = dir.Replace(pup, "");
+						if (x != "\\MonoBleedingEdge"
+							&& x != "\\PlateUp_Data")
+						{
+							Directory.Delete(dir, true);
+						}
+					}
+
+					string[] datadirs = Directory.GetDirectories(pup + "\\PlateUp_Data");
+					foreach (string dir in datadirs)
+					{
+						string x = dir.Replace(pup + "\\PlateUp_Data", "");
+						if (x != "\\Managed"
+							&& x != "\\Plugins"
+							&& x != "\\Resources")
+						{
+							Directory.Delete(dir, true);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -529,7 +611,7 @@ namespace PlateUp_Package_Manager
 		 * Package Managment
 		 */
 
-		public static string CreatePackageJson(string path, string id, string name, string description, string author, string version, string url, List<string> hardDepends)
+		public static string CreatePackageJson(string path, string id, string name, string description, string author, string version, string url, List<string> hardDepends, List<string> incompatables)
 		{
 			string[] allfiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
 			Dictionary<string, string> paths = new Dictionary<string, string>();
@@ -541,6 +623,8 @@ namespace PlateUp_Package_Manager
 			Package package = new Package(id, name, description, author, version, url, paths);
 			if (hardDepends != null)
 				package.HardDepends = hardDepends;
+			if (incompatables != null)
+				package.Incompatable = incompatables;
 			package.PackageVersion = 1;
 			return JsonConvert.SerializeObject(package);
 		}
@@ -578,6 +662,7 @@ namespace PlateUp_Package_Manager
 			AddInstalledPackage(package);
 			SaveInstalledPackages();
 			MainForm.Log("Installed package " + package.Name + " v" + package.Version);
+			MainForm.UpdateInstallButtons(true);
 		}
 
 		public static void DisablePackage(Package package)
@@ -875,8 +960,15 @@ namespace PlateUp_Package_Manager
 
 		public static Repository GetRepositoryInfo(string URL)
 		{
-			Repository repository = JsonConvert.DeserializeObject<Repository>(GetHTMLFromURL(URL + "/REPO"));
-			return repository;
+			try
+			{
+				Repository repository = JsonConvert.DeserializeObject<Repository>(GetHTMLFromURL(URL + "/REPO"));
+				return repository;
+			}
+			catch
+			{
+				return new Repository("Invalid Repository", URL, "This package repository is invalid.", new List<Package>{ });
+			}
 		}
 
 		public static List<Package> GetRepositoryPackages(Repository repository)
@@ -913,6 +1005,7 @@ namespace PlateUp_Package_Manager
 
 		public List<string> HardDepends = new List<string>();
 		public List<string> SoftDepends = new List<string>();
+		public List<string> Incompatable = new List<string>();
 		public int PackageVersion { get; set; }
 		public Dictionary<string, string> FilePaths { get; set; }
 

@@ -34,6 +34,8 @@
 			this.button_installed = new System.Windows.Forms.Button();
 			this.button_search = new System.Windows.Forms.Button();
 			this.panel_home = new System.Windows.Forms.Panel();
+			this.button_clean = new System.Windows.Forms.Button();
+			this.button_packageBuilder = new System.Windows.Forms.Button();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
@@ -66,7 +68,6 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.button_settings = new System.Windows.Forms.Button();
 			this.label_logger = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
 			this.panel_home.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel_repositories.SuspendLayout();
@@ -116,7 +117,8 @@
 			// 
 			// panel_home
 			// 
-			this.panel_home.Controls.Add(this.button1);
+			this.panel_home.Controls.Add(this.button_clean);
+			this.panel_home.Controls.Add(this.button_packageBuilder);
 			this.panel_home.Controls.Add(this.pictureBox1);
 			this.panel_home.Controls.Add(this.label7);
 			this.panel_home.Controls.Add(this.label5);
@@ -125,6 +127,26 @@
 			this.panel_home.Name = "panel_home";
 			this.panel_home.Size = new System.Drawing.Size(776, 397);
 			this.panel_home.TabIndex = 4;
+			// 
+			// button_clean
+			// 
+			this.button_clean.Location = new System.Drawing.Point(610, 360);
+			this.button_clean.Name = "button_clean";
+			this.button_clean.Size = new System.Drawing.Size(75, 23);
+			this.button_clean.TabIndex = 6;
+			this.button_clean.Text = "Clean";
+			this.button_clean.UseVisualStyleBackColor = true;
+			this.button_clean.Click += new System.EventHandler(this.button_clean_Click);
+			// 
+			// button_packageBuilder
+			// 
+			this.button_packageBuilder.Location = new System.Drawing.Point(691, 360);
+			this.button_packageBuilder.Name = "button_packageBuilder";
+			this.button_packageBuilder.Size = new System.Drawing.Size(75, 23);
+			this.button_packageBuilder.TabIndex = 5;
+			this.button_packageBuilder.Text = "Builder";
+			this.button_packageBuilder.UseVisualStyleBackColor = true;
+			this.button_packageBuilder.Click += new System.EventHandler(this.button_packageBuilder_Click);
 			// 
 			// pictureBox1
 			// 
@@ -455,16 +477,6 @@
 			this.label_logger.TabIndex = 8;
 			this.label_logger.Text = "label_logger";
 			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(691, 360);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 5;
-			this.button1.Text = "Builder";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -540,6 +552,7 @@
 		private System.Windows.Forms.Button button_uninstallML;
 		private System.Windows.Forms.ProgressBar progressBar2;
         private System.Windows.Forms.Button button_toggleMod;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button_packageBuilder;
+        private System.Windows.Forms.Button button_clean;
     }
 }

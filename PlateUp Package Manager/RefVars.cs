@@ -98,7 +98,7 @@ namespace PlateUp_Package_Manager
 		private static Regex pattern = new Regex(@"([0-9])\.([0-9])\.([0-9])");
 
 		private static SemVersion LatestVersion = null;
-		private static SemVersion version = new SemVersion(0, 9, 2);
+		private static SemVersion version = new SemVersion(0, 9, 4);
 
 		public static SemVersion GetLatestVersion()
 		{
