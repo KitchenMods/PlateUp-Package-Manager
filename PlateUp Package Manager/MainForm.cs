@@ -600,6 +600,18 @@ namespace PlateUp_Package_Manager
 				}
 			}
 		}
+
+		private void button_searchDownload_Click(object sender, EventArgs e)
+		{
+			if (listView_search.SelectedItems.Count > 0)
+			{
+				Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
+				
+				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
+				UpdateInstallButtons(false);
+				PackageManager.DownloadRemotePackage(downloadPath, package);
+			}
+		}
 	}
 
 	public class PackageManager
@@ -870,6 +882,17 @@ namespace PlateUp_Package_Manager
 			MainForm.Log("Downloading " + package.Name + "...");
 		}
 
+		public static void DownloadRemotePackage(string downloadURL, Package package)
+		{
+			RefVars.MakeSureDirectoryExists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop));
+			WebClient webClient = new WebClient();
+			currentlyInstalling = package;
+			webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Downloaded);
+			webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+			webClient.DownloadFileAsync(new Uri(downloadURL), System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/" + package.ID + "-" + package.Version + ".plateupmod");
+			MainForm.Log("Downloading " + package.Name + "...");
+		}
+
 		private static void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
 		{
 			MainForm.SetProgessBar(e.ProgressPercentage);
@@ -881,6 +904,15 @@ namespace PlateUp_Package_Manager
 				InstallPackage(RefVars.packageManagerTempPath + "/" + currentlyInstalling.ID + "-" + currentlyInstalling.Version + ".plateupmod");
 				currentlyInstalling = null;
 				MainForm.RefreshSearchPage();
+			}
+		}
+		private static void Downloaded(object sender, AsyncCompletedEventArgs e)
+		{
+			if (currentlyInstalling != null)
+			{
+				MainForm.Log("Downloaded " + currentlyInstalling.Name + " to your desktop.");
+				currentlyInstalling = null;
+				MainForm.UpdateInstallButtons(true);
 			}
 		}
 

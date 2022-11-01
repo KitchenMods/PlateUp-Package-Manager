@@ -58,6 +58,7 @@
 			this.button_installed_remove = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.panel_search = new System.Windows.Forms.Panel();
+			this.button_searchDownload = new System.Windows.Forms.Button();
 			this.label6 = new System.Windows.Forms.Label();
 			this.textBox_searchField = new System.Windows.Forms.TextBox();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -367,6 +368,7 @@
 			// 
 			// panel_search
 			// 
+			this.panel_search.Controls.Add(this.button_searchDownload);
 			this.panel_search.Controls.Add(this.label6);
 			this.panel_search.Controls.Add(this.textBox_searchField);
 			this.panel_search.Controls.Add(this.progressBar1);
@@ -379,6 +381,16 @@
 			this.panel_search.Name = "panel_search";
 			this.panel_search.Size = new System.Drawing.Size(776, 397);
 			this.panel_search.TabIndex = 6;
+			// 
+			// button_searchDownload
+			// 
+			this.button_searchDownload.Location = new System.Drawing.Point(698, 338);
+			this.button_searchDownload.Name = "button_searchDownload";
+			this.button_searchDownload.Size = new System.Drawing.Size(75, 23);
+			this.button_searchDownload.TabIndex = 14;
+			this.button_searchDownload.Text = "Local Down";
+			this.button_searchDownload.UseVisualStyleBackColor = true;
+			this.button_searchDownload.Click += new System.EventHandler(this.button_searchDownload_Click);
 			// 
 			// label6
 			// 
@@ -554,5 +566,6 @@
         private System.Windows.Forms.Button button_toggleMod;
         private System.Windows.Forms.Button button_packageBuilder;
         private System.Windows.Forms.Button button_clean;
+        private System.Windows.Forms.Button button_searchDownload;
     }
 }
