@@ -512,11 +512,22 @@ namespace PlateUp_Package_Manager
 			string search = textBox_searchField.Text;
 			listView_search.Clear();
 			listView_search.Columns.Add("", -2);
-			foreach (string packagename in searchedPackagesListBoxKey.Values)
+			searchedPackagesListBoxKey.Clear();
+			searchedPackagesListBoxIndexes.Clear();
+			label_selectedSearchPackageInformation.Text = "";
+			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
 			{
-				if (packagename.Contains(search))
+				foreach (Package package in repo.Packages)
 				{
-					ListViewItem item = listView_search.Items.Add(packagename);
+					if (!PackageManager.IsPackageInstalled(package))
+					{
+						if (package.Name.Contains(search))
+						{
+							searchedPackagesListBoxKey.Add(package, package.Name + " v" + package.Version);
+							searchedPackagesListBoxIndexes.Add(package);
+							ListViewItem item = listView_search.Items.Add(package.Name + " v" + package.Version);
+						}
+					}
 				}
 			}
 		}
