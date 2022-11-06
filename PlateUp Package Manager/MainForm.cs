@@ -18,6 +18,7 @@ using Semver;
 using System.Runtime.CompilerServices;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms.VisualStyles;
+using System.Diagnostics;
 
 namespace PlateUp_Package_Manager
 {
@@ -82,6 +83,8 @@ namespace PlateUp_Package_Manager
 
 			RefVars.RoundButton(button_update);
 			RefVars.RoundButton(button_debuglog);
+
+			RefVars.RoundButton(button_launch);
 
 			RefVars.RoundTextbox(textBox_searchField);
 			RefVars.RoundTextbox(textBox_addrepo);
@@ -186,7 +189,7 @@ namespace PlateUp_Package_Manager
 
 			if (panel == panel_home) label_title.Text = "PlateUp! Mod Manager - Home";
 			if (panel == panel_repositories) label_title.Text = "PlateUp! Mod Manager - Repositories";
-			if (panel == panel_installed) label_title.Text = "PlateUp! Mod Manager - Installed";
+			if (panel == panel_installed) label_title.Text = "PlateUp! Mod Manager - Mods";
 			if (panel == panel_search) label_title.Text = "PlateUp! Mod Manager - Search";
 
 			panel.Visible = true;
@@ -916,6 +919,35 @@ namespace PlateUp_Package_Manager
 					UpdateManager.Update();
 				}
 			}
+		}
+
+		private void button_mods_refresh_Click(object sender, EventArgs e)
+		{
+			List<string> repos = new List<string>();
+			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
+			{
+				repos.Add(repo.URL);
+			}
+
+			RepositoryManager.SetInstalledRepositories(new List<Repository>());
+
+			foreach (string repo in repos)
+			{
+				RepositoryManager.AddInstalledRepository(RepositoryManager.GetRepositoryInfo(repo));
+			}
+
+			RefreshInstalledRepositories();
+			RefreshSearchPage();
+		}
+
+		private void button_launch_vanilla_Click(object sender, EventArgs e)
+		{
+			//Process.Start(exe);
+		}
+
+		private void button_launch_Click(object sender, EventArgs e)
+		{
+			Process.Start("steam://rungameid/1599600");
 		}
 	}
 

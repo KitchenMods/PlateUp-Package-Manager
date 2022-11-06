@@ -81,6 +81,7 @@
 			this.label7 = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.panel_home = new System.Windows.Forms.Panel();
+			this.button_launch = new System.Windows.Forms.Button();
 			this.button_launch_melonloader = new System.Windows.Forms.Button();
 			this.button_launch_bepinex = new System.Windows.Forms.Button();
 			this.button_launch_vanilla = new System.Windows.Forms.Button();
@@ -380,6 +381,7 @@
 			this.button_mods_refresh.TabIndex = 16;
 			this.button_mods_refresh.Text = "Refresh";
 			this.button_mods_refresh.UseVisualStyleBackColor = false;
+			this.button_mods_refresh.Click += new System.EventHandler(this.button_mods_refresh_Click);
 			// 
 			// label_mod_dependslist
 			// 
@@ -707,6 +709,7 @@
 			// 
 			// panel_home
 			// 
+			this.panel_home.Controls.Add(this.button_launch);
 			this.panel_home.Controls.Add(this.button_launch_melonloader);
 			this.panel_home.Controls.Add(this.button_launch_bepinex);
 			this.panel_home.Controls.Add(this.button_launch_vanilla);
@@ -718,14 +721,30 @@
 			this.panel_home.Size = new System.Drawing.Size(964, 642);
 			this.panel_home.TabIndex = 4;
 			// 
+			// button_launch
+			// 
+			this.button_launch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(159)))), ((int)(((byte)(209)))));
+			this.button_launch.FlatAppearance.BorderSize = 0;
+			this.button_launch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button_launch.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button_launch.ForeColor = System.Drawing.SystemColors.Window;
+			this.button_launch.Location = new System.Drawing.Point(21, 150);
+			this.button_launch.Name = "button_launch";
+			this.button_launch.Size = new System.Drawing.Size(263, 46);
+			this.button_launch.TabIndex = 10;
+			this.button_launch.Text = "Launch PlateUp!";
+			this.button_launch.UseVisualStyleBackColor = false;
+			this.button_launch.Click += new System.EventHandler(this.button_launch_Click);
+			// 
 			// button_launch_melonloader
 			// 
 			this.button_launch_melonloader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(159)))), ((int)(((byte)(209)))));
+			this.button_launch_melonloader.Enabled = false;
 			this.button_launch_melonloader.FlatAppearance.BorderSize = 0;
 			this.button_launch_melonloader.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_launch_melonloader.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.button_launch_melonloader.ForeColor = System.Drawing.SystemColors.Window;
-			this.button_launch_melonloader.Location = new System.Drawing.Point(664, 149);
+			this.button_launch_melonloader.Location = new System.Drawing.Point(667, 581);
 			this.button_launch_melonloader.Name = "button_launch_melonloader";
 			this.button_launch_melonloader.Size = new System.Drawing.Size(263, 46);
 			this.button_launch_melonloader.TabIndex = 9;
@@ -735,11 +754,12 @@
 			// button_launch_bepinex
 			// 
 			this.button_launch_bepinex.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(159)))), ((int)(((byte)(209)))));
+			this.button_launch_bepinex.Enabled = false;
 			this.button_launch_bepinex.FlatAppearance.BorderSize = 0;
 			this.button_launch_bepinex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_launch_bepinex.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.button_launch_bepinex.ForeColor = System.Drawing.SystemColors.Window;
-			this.button_launch_bepinex.Location = new System.Drawing.Point(341, 150);
+			this.button_launch_bepinex.Location = new System.Drawing.Point(344, 582);
 			this.button_launch_bepinex.Name = "button_launch_bepinex";
 			this.button_launch_bepinex.Size = new System.Drawing.Size(263, 46);
 			this.button_launch_bepinex.TabIndex = 8;
@@ -749,16 +769,18 @@
 			// button_launch_vanilla
 			// 
 			this.button_launch_vanilla.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(159)))), ((int)(((byte)(209)))));
+			this.button_launch_vanilla.Enabled = false;
 			this.button_launch_vanilla.FlatAppearance.BorderSize = 0;
 			this.button_launch_vanilla.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_launch_vanilla.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.button_launch_vanilla.ForeColor = System.Drawing.SystemColors.Window;
-			this.button_launch_vanilla.Location = new System.Drawing.Point(18, 149);
+			this.button_launch_vanilla.Location = new System.Drawing.Point(21, 581);
 			this.button_launch_vanilla.Name = "button_launch_vanilla";
 			this.button_launch_vanilla.Size = new System.Drawing.Size(263, 46);
 			this.button_launch_vanilla.TabIndex = 7;
 			this.button_launch_vanilla.Text = "Launch Vanilla";
 			this.button_launch_vanilla.UseVisualStyleBackColor = false;
+			this.button_launch_vanilla.Click += new System.EventHandler(this.button_launch_vanilla_Click);
 			// 
 			// MainForm
 			// 
@@ -858,5 +880,6 @@
 		private System.Windows.Forms.Label label_repo_url;
 		private System.Windows.Forms.Button button_update;
 		private System.Windows.Forms.Button button_debuglog;
+		private System.Windows.Forms.Button button_launch;
 	}
 }
