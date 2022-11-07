@@ -39,7 +39,7 @@ namespace PlateUp_Package_Manager
 
 		public static void UniversalOnFormLoad(Form form)
 		{
-			form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch;
+			form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch + " - UIBeta v2";
 
 		}
 
@@ -127,7 +127,7 @@ namespace PlateUp_Package_Manager
 		private static Regex pattern = new Regex(@"([0-9])\.([0-9])\.([0-9])");
 
 		private static SemVersion LatestVersion = null;
-		private static SemVersion version = new SemVersion(0, 9, 8);
+		private static SemVersion version = new SemVersion(0, 9, 9);
 
 		public static SemVersion GetLatestVersion()
 		{

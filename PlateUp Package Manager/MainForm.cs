@@ -56,7 +56,7 @@ namespace PlateUp_Package_Manager
 			SettingsManager.Load();
 			Setup();
 			SetUpPanels();
-			SetActivePanel(panel_installed);
+			SetActivePanel(panel_home);
 			RefreshSearchPage();
 			RefreshInstalledPackagesPage();
 
@@ -187,10 +187,32 @@ namespace PlateUp_Package_Manager
 			panel_installed.Visible = false;
 			panel_search.Visible = false;
 
-			if (panel == panel_home) label_title.Text = "PlateUp! Mod Manager - Home";
-			if (panel == panel_repositories) label_title.Text = "PlateUp! Mod Manager - Repositories";
-			if (panel == panel_installed) label_title.Text = "PlateUp! Mod Manager - Mods";
-			if (panel == panel_search) label_title.Text = "PlateUp! Mod Manager - Search";
+			button_home.BackColor = Color.FromArgb(240, 240, 240, 240);
+			button_repositories.BackColor = Color.FromArgb(240, 240, 240, 240);
+			button_installed.BackColor = Color.FromArgb(240, 240, 240, 240);
+			button_settings.BackColor = Color.FromArgb(240, 240, 240, 240);
+
+
+			if (panel == panel_home)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Home";
+				button_home.BackColor = Color.FromArgb(240, 0, 159, 209);
+			}
+			if (panel == panel_repositories)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Repositories";
+				button_repositories.BackColor = Color.FromArgb(240, 0, 159, 209);
+			}
+			if (panel == panel_installed)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Mods";
+				button_installed.BackColor = Color.FromArgb(240, 0, 159, 209);
+			} 
+			if (panel == panel_search)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Search";
+				button_settings.BackColor = Color.FromArgb(240, 0, 159, 209);
+			}
 
 			panel.Visible = true;
 		}

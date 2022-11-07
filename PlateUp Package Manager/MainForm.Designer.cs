@@ -710,9 +710,6 @@
 			// panel_home
 			// 
 			this.panel_home.Controls.Add(this.button_launch);
-			this.panel_home.Controls.Add(this.button_launch_melonloader);
-			this.panel_home.Controls.Add(this.button_launch_bepinex);
-			this.panel_home.Controls.Add(this.button_launch_vanilla);
 			this.panel_home.Controls.Add(this.pictureBox1);
 			this.panel_home.Controls.Add(this.label7);
 			this.panel_home.Controls.Add(this.label5);
@@ -744,7 +741,7 @@
 			this.button_launch_melonloader.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_launch_melonloader.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.button_launch_melonloader.ForeColor = System.Drawing.SystemColors.Window;
-			this.button_launch_melonloader.Location = new System.Drawing.Point(667, 581);
+			this.button_launch_melonloader.Location = new System.Drawing.Point(938, 725);
 			this.button_launch_melonloader.Name = "button_launch_melonloader";
 			this.button_launch_melonloader.Size = new System.Drawing.Size(263, 46);
 			this.button_launch_melonloader.TabIndex = 9;
@@ -759,7 +756,7 @@
 			this.button_launch_bepinex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_launch_bepinex.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.button_launch_bepinex.ForeColor = System.Drawing.SystemColors.Window;
-			this.button_launch_bepinex.Location = new System.Drawing.Point(344, 582);
+			this.button_launch_bepinex.Location = new System.Drawing.Point(615, 726);
 			this.button_launch_bepinex.Name = "button_launch_bepinex";
 			this.button_launch_bepinex.Size = new System.Drawing.Size(263, 46);
 			this.button_launch_bepinex.TabIndex = 8;
@@ -774,7 +771,7 @@
 			this.button_launch_vanilla.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.button_launch_vanilla.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.button_launch_vanilla.ForeColor = System.Drawing.SystemColors.Window;
-			this.button_launch_vanilla.Location = new System.Drawing.Point(21, 581);
+			this.button_launch_vanilla.Location = new System.Drawing.Point(292, 725);
 			this.button_launch_vanilla.Name = "button_launch_vanilla";
 			this.button_launch_vanilla.Size = new System.Drawing.Size(263, 46);
 			this.button_launch_vanilla.TabIndex = 7;
@@ -789,7 +786,10 @@
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.ClientSize = new System.Drawing.Size(2332, 1421);
 			this.Controls.Add(this.button_searchDownload);
+			this.Controls.Add(this.button_launch_melonloader);
+			this.Controls.Add(this.button_launch_bepinex);
 			this.Controls.Add(this.panel3);
+			this.Controls.Add(this.button_launch_vanilla);
 			this.Controls.Add(this.button_search_refresh);
 			this.Controls.Add(this.panel2);
 			this.Controls.Add(this.button_uninstallML);
