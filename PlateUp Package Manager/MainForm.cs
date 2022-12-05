@@ -109,6 +109,9 @@ namespace PlateUp_Package_Manager
 					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/version.dll");
 				}
 			}
+
+
+			RefreshPackages();
 		}
 
 		public Package JsonToPackage(string json)
@@ -932,19 +935,21 @@ namespace PlateUp_Package_Manager
 
 		private void button_mods_refresh_Click(object sender, EventArgs e)
 		{
+			RefreshPackages();
+		}
+
+		private void RefreshPackages()
+		{
 			List<string> repos = new List<string>();
 			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
 			{
 				repos.Add(repo.URL);
 			}
-
 			RepositoryManager.SetInstalledRepositories(new List<Repository>());
-
 			foreach (string repo in repos)
 			{
 				RepositoryManager.AddInstalledRepository(RepositoryManager.GetRepositoryInfo(repo));
 			}
-
 			RefreshInstalledRepositories();
 			RefreshSearchPage();
 		}
