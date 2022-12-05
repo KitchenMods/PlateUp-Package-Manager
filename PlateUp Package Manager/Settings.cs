@@ -90,7 +90,6 @@ namespace PlateUp_Package_Manager
 					UpdateManager.Update();
 				}
 			}
-			
         }
 
         private void button5_Click(object sender, EventArgs e)

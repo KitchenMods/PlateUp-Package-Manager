@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using Semver;
 using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace PlateUp_Package_Manager
 {
@@ -38,8 +39,37 @@ namespace PlateUp_Package_Manager
 
 		public static void UniversalOnFormLoad(Form form)
 		{
+			//form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch + " - UIBeta v3";
 			form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch;
 
+		}
+
+		public static void RoundButton(Button button)
+		{
+			Rectangle Bounds = new Rectangle(0, 0, button.Width, button.Height);
+			int CornerRadius = 40;
+			System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+			path.AddArc(Bounds.X, Bounds.Y, CornerRadius, CornerRadius, 180, 90);
+			path.AddArc(Bounds.X + Bounds.Width - CornerRadius, Bounds.Y, CornerRadius, CornerRadius, 270, 90);
+			path.AddArc(Bounds.X + Bounds.Width - CornerRadius, Bounds.Y + Bounds.Height - CornerRadius, CornerRadius, CornerRadius, 0, 90);
+			path.AddArc(Bounds.X, Bounds.Y + Bounds.Height - CornerRadius, CornerRadius, CornerRadius, 90, 90);
+			path.CloseAllFigures();
+
+			button.Region = new Region(path);
+		}
+
+		public static void RoundTextbox(TextBox textbox)
+		{
+			Rectangle Bounds = new Rectangle(0, 0, textbox.Width, textbox.Height);
+			int CornerRadius = 40;
+			System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+			path.AddArc(Bounds.X, Bounds.Y, CornerRadius, CornerRadius, 180, 90);
+			path.AddArc(Bounds.X + Bounds.Width - CornerRadius, Bounds.Y, CornerRadius, CornerRadius, 270, 90);
+			path.AddArc(Bounds.X + Bounds.Width - CornerRadius, Bounds.Y + Bounds.Height - CornerRadius, CornerRadius, CornerRadius, 0, 90);
+			path.AddArc(Bounds.X, Bounds.Y + Bounds.Height - CornerRadius, CornerRadius, CornerRadius, 90, 90);
+			path.CloseAllFigures();
+
+			textbox.Region = new Region(path);
 		}
 	}
 
@@ -98,7 +128,7 @@ namespace PlateUp_Package_Manager
 		private static Regex pattern = new Regex(@"([0-9])\.([0-9])\.([0-9])");
 
 		private static SemVersion LatestVersion = null;
-		private static SemVersion version = new SemVersion(0, 9, 8);
+		private static SemVersion version = new SemVersion(0, 9, 9);
 
 		public static SemVersion GetLatestVersion()
 		{

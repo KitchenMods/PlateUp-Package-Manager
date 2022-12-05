@@ -16,6 +16,9 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Semver;
 using System.Runtime.CompilerServices;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms.VisualStyles;
+using System.Diagnostics;
 
 namespace PlateUp_Package_Manager
 {
@@ -30,12 +33,14 @@ namespace PlateUp_Package_Manager
 
 		public MainForm()
 		{
+			//1232,718
 			InitializeComponent();
 		}
 
+
 		public void UpdateInstallButtons(bool enabled)
 		{
-			button_searchInstall.Enabled = enabled;
+			button_mods_modify.Enabled = enabled;
 			button_toggleMod.Enabled = enabled;
 			button_manuallInstall.Enabled = enabled;
 			button_installed_remove.Enabled = enabled;
@@ -43,33 +48,49 @@ namespace PlateUp_Package_Manager
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 
-			//string json = PackageManager.CreatePackageJson(@"C:\Users\Pilch\OneDrive\Desktop\MelonLoader");
-			//Console.WriteLine(json);
-			//string json = JsonConvert.SerializeObject(new Package("someid", "somename", "somedesc", "someauthor", "someversion", "someurl", new Dictionary<string, string> { }));
-			//File.WriteAllText(@"C:\Users\Pilch\OneDrive\Desktop\package.json", json);
-
-			this.Size = new Size(816, 505);
-			this.MaximumSize = new Size(816, 505);
-			this.MinimumSize = new Size(816, 505);
+			this.Size = new Size(1252, 760);
+			this.MaximumSize = new Size(1252, 760);
+			this.MinimumSize = new Size(1252, 760);
 			RefVars.UniversalOnFormLoad(this);
+			label_currentversion.Text = "Current Version: " + VersionManager.GetCurrentVersion();
 			SettingsManager.Load();
 			Setup();
 			SetUpPanels();
 			SetActivePanel(panel_home);
+			RefreshSearchPage();
+			RefreshInstalledPackagesPage();
 
-			/* Disables BepInEx Support
-			if (Directory.Exists(SettingsManager.Get<string>("plateupfolder") + "/BepInEx"))
-			{
-				DialogResult dialogResult = MessageBox.Show("We've detected BepInEx is already installed in PlateUp, this WILL cause issues with MelonLoader mods.\nDo you want to uninstall BepInEx?\n\nIf you don't uninstall BepInEx, you may encounter unforseen problems.", "WARNING!", MessageBoxButtons.YesNo);
-				if (dialogResult == DialogResult.Yes)
-				{
-					ForceDeleteDir(SettingsManager.Get<string>("plateupfolder") + "/BepInEx", true);
-					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/winhttp.dll");
-					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/doorstop_config.ini");
-					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/changelog.txt");
-				}
-			}
-			*/
+			RefVars.RoundButton(button_home);
+			RefVars.RoundButton(button_repositories);
+			RefVars.RoundButton(button_installed);
+			RefVars.RoundButton(button_search);
+			RefVars.RoundButton(button_settings);
+
+			RefVars.RoundButton(button_launch_vanilla);
+			RefVars.RoundButton(button_launch_bepinex);
+			RefVars.RoundButton(button_launch_melonloader);
+
+			RefVars.RoundButton(button_clean);
+			RefVars.RoundButton(button_packageBuilder);
+
+			RefVars.RoundButton(button_mods_localdownload);
+			RefVars.RoundButton(button_mods_modify);
+			RefVars.RoundButton(button_mods_refresh);
+			RefVars.RoundButton(button_toggleMod);
+
+			RefVars.RoundButton(button_addrepo);
+			RefVars.RoundButton(button_repos_remove);
+
+			RefVars.RoundButton(button_update);
+			RefVars.RoundButton(button_debuglog);
+
+			RefVars.RoundButton(button_launch);
+			RefVars.RoundButton(button_manuallInstall);
+
+			RefVars.RoundTextbox(textBox_searchField);
+			RefVars.RoundTextbox(textBox_addrepo);
+
+
 
 			if (Directory.Exists(RefVars.applicationDataPath + "/PlateUpModManager"))
 			{
@@ -88,18 +109,6 @@ namespace PlateUp_Package_Manager
 					ForceDeleteFile(SettingsManager.Get<string>("plateupfolder") + "/version.dll");
 				}
 			}
-			
-			/* Forces MelonLoader
-			if (!Directory.Exists(SettingsManager.Get<string>("plateupfolder") + "/MelonLoader"))
-			{
-				//ML not installed
-				DialogResult dialogResult = MessageBox.Show("Melonloader doesn't seem to be installed, it's required to run mods! Do you want to install it now?", "MelonLoader Missing", MessageBoxButtons.YesNo);
-				if (dialogResult == DialogResult.Yes)
-				{
-					MelonLoaderInstaller.installMelonLoader(this);
-				}
-			}
-			*/
 		}
 
 		public Package JsonToPackage(string json)
@@ -151,19 +160,25 @@ namespace PlateUp_Package_Manager
 				Directory.Delete(RefVars.packageManagerTempPath, true);
 			RefreshMLInstallState();
 
-			label_selectedInstalledPackageInformation.Text = "";
-			label_selectedInstalledRepoInformation.Text = "";
-			label_selectedSearchPackageInformation.Text = "";
+			label_repo_title.Text = "";
+			label_repo_description.Text = "";
+			label_repo_url.Text = "";
+
+			label_mod_title.Text = "";
+			label_mod_version.Text = "";
+			label_mod_description.Text = "";
+			label_mod_author.Text = "";
+			label_mod_dependslist.Text = "";
 			label_logger.Text = "";
 
 		}
 
 		private void SetUpPanels()
 		{
-			panel_home.Location = new Point(12, 12);
-			panel_repositories.Location = new Point(12, 12);
-			panel_installed.Location = new Point(12, 12);
-			panel_search.Location = new Point(12, 12);
+			panel_home.Location = new Point(268, 76);
+			panel_repositories.Location = new Point(268, 76);
+			panel_installed.Location = new Point(268, 76);
+			panel_search.Location = new Point(268, 76);
 		}
 
 		private void SetActivePanel(Panel panel)
@@ -172,6 +187,33 @@ namespace PlateUp_Package_Manager
 			panel_repositories.Visible = false;
 			panel_installed.Visible = false;
 			panel_search.Visible = false;
+
+			button_home.BackColor = Color.FromArgb(240, 240, 240, 240);
+			button_repositories.BackColor = Color.FromArgb(240, 240, 240, 240);
+			button_installed.BackColor = Color.FromArgb(240, 240, 240, 240);
+			button_settings.BackColor = Color.FromArgb(240, 240, 240, 240);
+
+
+			if (panel == panel_home)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Home";
+				button_home.BackColor = Color.FromArgb(240, 0, 159, 209);
+			}
+			if (panel == panel_repositories)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Repositories";
+				button_repositories.BackColor = Color.FromArgb(240, 0, 159, 209);
+			}
+			if (panel == panel_installed)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Mods";
+				button_installed.BackColor = Color.FromArgb(240, 0, 159, 209);
+			} 
+			if (panel == panel_search)
+			{
+				label_title.Text = "PlateUp! Mod Manager - Search";
+				button_settings.BackColor = Color.FromArgb(240, 0, 159, 209);
+			}
 
 			panel.Visible = true;
 		}
@@ -192,18 +234,22 @@ namespace PlateUp_Package_Manager
 		{
 			SetActivePanel(panel_installed);
 			RefreshInstalledPackagesPage();
+			RefreshSearchPage();
 		}
 
 		private void button_search_Click(object sender, EventArgs e)
 		{
-			SetActivePanel(panel_search);
-			RefreshSearchPage();
+			//SetActivePanel(panel_search);
+			//RefreshSearchPage();
 		}
 
 		private void button_settings_Click(object sender, EventArgs e)
 		{
-			Settings settingsMenu = new Settings();
-			settingsMenu.Show();
+			//Settings settingsMenu = new Settings();
+			//settingsMenu.Show();
+			
+			SetActivePanel(panel_search);
+			RefreshSearchPage();
 		}
 
 		private void button_installed_remove_Click(object sender, EventArgs e)
@@ -221,7 +267,11 @@ namespace PlateUp_Package_Manager
 			listView_installed.Columns.Add("", -2);
 			installedPackagesListBoxKey.Clear();
 			installedPackages.Clear();
-			label_selectedInstalledPackageInformation.Text = "";
+			label_mod_title.Text = "";
+			label_mod_version.Text = "";
+			label_mod_description.Text = "";
+			label_mod_author.Text = "";
+			label_mod_dependslist.Text = "";
 			PackageManager.LoadInstalledPackages();
 			foreach (Package package in PackageManager.GetInstalledPackages())
 			{
@@ -257,7 +307,6 @@ namespace PlateUp_Package_Manager
 			listView_search.Columns.Add("", -2);
 			searchedPackagesListBoxKey.Clear();
 			searchedPackagesListBoxIndexes.Clear();
-			label_selectedSearchPackageInformation.Text = "";
 			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
 			{
 				foreach (Package package in repo.Packages)
@@ -286,20 +335,33 @@ namespace PlateUp_Package_Manager
 
 		private void listView_installed_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			listView_search.SelectedItems.Clear();
+			button_mods_modify.Text = "Uninstall";
 			if (listView_installed.SelectedItems.Count > 0)
 			{
 				Package package = installedPackagesListBoxKey[listView_installed.SelectedItems[0].Text];
-				label_selectedInstalledPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
+				//label_selectedInstalledPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
+				label_mod_title.Text = package.Name;
+				label_mod_description.Text = package.Description;
+				label_mod_version.Text = "Version: " + package.Version;
+				label_mod_author.Text = package.Author;
+
+				label_mod_dependslist.Text = "";
 				foreach (string depends in package.HardDepends)
 				{
-					label_selectedInstalledPackageInformation.Text = label_selectedInstalledPackageInformation.Text + "\n" + depends;
+					//label_selectedInstalledPackageInformation.Text = label_selectedInstalledPackageInformation.Text + "\n" + depends;
+					label_mod_dependslist.Text += depends + "\n";
 				}
 				button_installed_remove.Enabled = true;
 			}
 			else
 			{
 				button_installed_remove.Enabled = false;
-				label_selectedInstalledPackageInformation.Text = "";
+				label_mod_title.Text = "";
+				label_mod_version.Text = "";
+				label_mod_description.Text = "";
+				label_mod_author.Text = "";
+				label_mod_dependslist.Text = "";
 			}
 		}
 
@@ -321,7 +383,9 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_repos_installedrepos.SelectedItems.Count > 0)
 			{
-				label_selectedInstalledRepoInformation.Text = "";
+				label_repo_title.Text = "";
+				label_repo_description.Text = "";
+				label_repo_url.Text = "";
 				RepositoryManager.RemoveInstalledRepository(installedReposListBoxKey[listView_repos_installedrepos.SelectedItems[0].Text]);
 				RefreshInstalledRepositories();
 			}
@@ -332,13 +396,18 @@ namespace PlateUp_Package_Manager
 			if (listView_repos_installedrepos.SelectedItems.Count > 0)
 			{
 				Repository repo= installedReposListBoxKey[listView_repos_installedrepos.SelectedItems[0].Text];
-				label_selectedInstalledRepoInformation.Text = "Name: " + repo.Name + "\n\nDescription: " + repo.Description + "\n\nURL: " + repo.URL;
+				//label_selectedInstalledRepoInformation.Text = "Name: " + repo.Name + "\n\nDescription: " + repo.Description + "\n\nURL: " + repo.URL;
+				label_repo_title.Text = repo.Name;
+				label_repo_description.Text = repo.Description;
+				label_repo_url.Text = repo.URL;
 				button_repos_remove.Enabled = true;
 			}
 			else
 			{
 				button_repos_remove.Enabled = false;
-				label_selectedInstalledRepoInformation.Text = "";
+				label_repo_title.Text = "";
+				label_repo_description.Text = "";
+				label_repo_url.Text = "";
 			}
 		}
 
@@ -363,21 +432,26 @@ namespace PlateUp_Package_Manager
 
 		private void listView_search_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			listView_installed.SelectedItems.Clear();
+			button_mods_modify.Text = "Install";
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				//Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
 				Package package = searchedPackagesListBoxIndexes[listView_search.SelectedItems[0].Index];
-				label_selectedSearchPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
+				//label_selectedSearchPackageInformation.Text = "Name: " + package.Name + "\n\nVersion: " + package.Version + "\n\nAuthor: " + package.Author + "\n\nDescription: " + package.Description + "\n\nDepends: ";
+				label_mod_title.Text = package.Name;
+				label_mod_description.Text = package.Description;
+				label_mod_version.Text = "Version: "+package.Version;
+				label_mod_author.Text = package.Author;
+
+				label_mod_dependslist.Text = "";
 				foreach (string depends in package.HardDepends)
 				{
-					label_selectedSearchPackageInformation.Text = label_selectedSearchPackageInformation.Text + "\n" + depends;
+					//label_selectedSearchPackageInformation.Text = label_selectedSearchPackageInformation.Text + "\n" + depends;
+					label_mod_dependslist.Text += depends + "\n";
 				}
-				button_searchInstall.Enabled = true;
 			}
 			else
 			{
-				button_searchInstall.Enabled = false;
-				label_selectedSearchPackageInformation.Text = "";
 			}
 		}
 
@@ -385,9 +459,7 @@ namespace PlateUp_Package_Manager
 		{
 			if (listView_search.SelectedItems.Count > 0)
 			{
-				//Package package = searchedPackagesListBoxKey.FirstOrDefault(x => x.Value == listView_search.SelectedItems[0].Text).Key;
 				Package package = searchedPackagesListBoxIndexes[listView_search.SelectedItems[0].Index];
-				//Package package = searchedPackagesListBoxKey[listView_search.SelectedItems[0].Text];
 				PackageManager.LoadInstalledPackages();
 				RefreshInstalledPackagesPage();
 				string[] installedKeys = installedPackages.Keys.ToArray();
@@ -462,20 +534,6 @@ namespace PlateUp_Package_Manager
 					}
 				}
 
-				/*
-				foreach (string hardDepend in package.HardDepends)
-				{
-					if (!installedPackages.ContainsKey(hardDepend))
-					{
-						DialogResult dialogResult = MessageBox.Show($"This package depends on {hardDepend}, which is not installed. Do you want to install anyway?\n\nProceeding to install may cause unforseen game problems.", "WARNING!", MessageBoxButtons.YesNo);
-						if (dialogResult == DialogResult.No)
-						{
-							return;
-						}
-					}
-				}
-				*/
-
 				List<Package> packages = PackageManager.GetInstalledPackages();
 				List<Package> packagesToUninstall = new List<Package>();
 				foreach (Package installedPackage in packages)
@@ -510,11 +568,37 @@ namespace PlateUp_Package_Manager
 		private void textBox_searchField_TextChanged(object sender, EventArgs e)
 		{
 			string search = textBox_searchField.Text;
+
+
+			//Installed
+
+			listView_installed.Clear();
+			listView_installed.Columns.Add("", -2);
+			installedPackagesListBoxKey.Clear();
+			installedPackages.Clear();
+			label_mod_title.Text = "";
+			label_mod_version.Text = "";
+			label_mod_description.Text = "";
+			label_mod_author.Text = "";
+			label_mod_dependslist.Text = "";
+			PackageManager.LoadInstalledPackages();
+			foreach (Package package in PackageManager.GetInstalledPackages())
+			{
+				if (!installedPackagesListBoxKey.ContainsKey(package.Name + " v" + package.Version) && package.Name.Contains(search))
+				{
+					installedPackagesListBoxKey.Add(package.Name + " v" + package.Version, package);
+					ListViewItem item = listView_installed.Items.Add(package.Name + " v" + package.Version);
+					if (!package.IsEnabled)
+						item.ForeColor = Color.Red;
+					installedPackages.Add($"{package.Author},{package.ID},{package.Version}", package);
+				}
+			}
+
+			//Search
 			listView_search.Clear();
 			listView_search.Columns.Add("", -2);
 			searchedPackagesListBoxKey.Clear();
 			searchedPackagesListBoxIndexes.Clear();
-			label_selectedSearchPackageInformation.Text = "";
 			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
 			{
 				foreach (Package package in repo.Packages)
@@ -656,6 +740,223 @@ namespace PlateUp_Package_Manager
 				UpdateInstallButtons(false);
 				PackageManager.DownloadRemotePackage(downloadPath, package);
 			}
+		}
+
+		private void button_mods_modify_Click(object sender, EventArgs e)
+		{
+			if (listView_installed.SelectedItems.Count > 0)
+			{
+				PackageManager.UninstallPackage(installedPackagesListBoxKey[listView_installed.SelectedItems[0].Text]);
+				RefreshInstalledPackagesPage();
+				RefreshSearchPage();
+			}
+			if (listView_search.SelectedItems.Count > 0)
+			{
+				Package package = searchedPackagesListBoxIndexes[listView_search.SelectedItems[0].Index];
+				PackageManager.LoadInstalledPackages();
+				RefreshInstalledPackagesPage();
+				string[] installedKeys = installedPackages.Keys.ToArray();
+				List<Match> regexMatches = new List<Match>();
+
+				foreach (string x in installedKeys)
+				{
+					Regex pattern = new Regex(@"([A-Za-z0-9]+),([A-Za-z0-9]+),([0-9]+)\.([0-9]+)\.([0-9]+)");
+					Match match = Regex.Match(x, pattern.ToString());
+					if (match.Success)
+						regexMatches.Add(match);
+				}
+				foreach (string incompatable in package.Incompatable)
+				{
+					Regex pattern = new Regex(@"([A-Za-z0-9]+),([A-Za-z0-9]+)");
+					Match match = Regex.Match(incompatable, pattern.ToString());
+					bool found = false;
+					foreach (Match regexMatch in regexMatches)
+					{
+						if (regexMatch.Groups[1].Value == match.Groups[1].Value && regexMatch.Groups[2].Value == match.Groups[2].Value)
+						{
+							found = true;
+							break;
+						}
+					}
+					if (found)
+					{
+						DialogResult dialogResult = MessageBox.Show($"Package: {package.Name} is incompatible with: {match.Groups[1]}.{match.Groups[2]}, Would you like to FORCE install?\n\nForcing the installation may cause unforseen problems.", "Incompatible Package!", MessageBoxButtons.YesNo);
+						if (dialogResult == DialogResult.No)
+						{
+							return;
+						}
+					}
+				}
+				foreach (string hardDepend in package.HardDepends)
+				{
+					Regex pattern = new Regex(@"([A-Za-z0-9]+),([A-Za-z0-9]+),([0-9]+)\.([0-9]+)\.([0-9]+)");
+					Match match = Regex.Match(hardDepend, pattern.ToString());
+
+					if (match.Success)
+					{
+						bool found = false;
+						foreach (Match regexMatch in regexMatches)
+						{
+							if (regexMatch.Groups[1].Value == match.Groups[1].Value && regexMatch.Groups[2].Value == match.Groups[2].Value)
+							{
+								Match foundVersion = regexMatch;
+								Match requiredVersion = match;
+
+								//Semver Checks
+								SemVersion foundVer = new SemVersion(int.Parse(regexMatch.Groups[3].Value), int.Parse(regexMatch.Groups[4].Value), int.Parse(regexMatch.Groups[5].Value));
+								SemVersion requiredVer = new SemVersion(int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value), int.Parse(match.Groups[5].Value));
+
+								int result = SemVersion.CompareSortOrder(foundVer, requiredVer);
+								if (result >= 0)
+								{
+									found = true;
+									break;
+								}
+							}
+						}
+						if (!found)
+						{
+							Log("Package: " + package.Name + " requires package: " + match.Groups[2].Value + " v" + match.Groups[3].Value + "." + match.Groups[4].Value + "." + match.Groups[5].Value + " to be installed");
+							return;
+						}
+					}
+					else
+					{
+						Log("Package: " + package.Name + " has an invalid hard depend: " + hardDepend);
+						return;
+					}
+				}
+
+				List<Package> packages = PackageManager.GetInstalledPackages();
+				List<Package> packagesToUninstall = new List<Package>();
+				foreach (Package installedPackage in packages)
+				{
+					if (installedPackage.Author == package.Author && installedPackage.ID == package.ID)
+					{
+						DialogResult dialogResult = MessageBox.Show($"Package: {package.Name} is already installed, would you like to reinstall?", "Package already installed!", MessageBoxButtons.YesNo);
+						if (dialogResult == DialogResult.No)
+						{
+							return;
+						}
+						else
+						{
+							packagesToUninstall.Add(installedPackage);
+						}
+					}
+				}
+
+				if (packagesToUninstall.Count > 0)
+				{
+					foreach (Package installedPackage in packagesToUninstall)
+					{
+						PackageManager.UninstallPackage(installedPackage);
+					}
+				}
+				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
+				UpdateInstallButtons(false);
+				PackageManager.InstallRemotePackage(downloadPath, package);
+			}
+		}
+
+		private void button_mods_localdownload_Click(object sender, EventArgs e)
+		{
+			if (listView_search.SelectedItems.Count > 0)
+			{
+				Package package = searchedPackagesListBoxIndexes[listView_search.SelectedItems[0].Index];
+
+				string downloadPath = package.URL + "/packages/" + package.ID + "/" + package.ID + "-" + package.Version + ".plateupmod";
+				UpdateInstallButtons(false);
+				PackageManager.DownloadRemotePackage(downloadPath, package);
+			}
+		}
+
+		private void button_debuglog_Click(object sender, EventArgs e)
+		{
+			List<string> outputLog = new List<string>();
+			if (!Directory.Exists(RefVars.packageManagerTempPath))
+				Directory.CreateDirectory(RefVars.packageManagerTempPath);
+			if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Debug.zip"))
+				File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Debug.zip");
+			
+			string[] allfiles = Directory.GetFiles(SettingsManager.Get<string>("plateupfolder"), "*.*", SearchOption.AllDirectories);
+
+			outputLog.Add("-----PlateUp Folder & Files-----");
+
+			foreach (string file in allfiles)
+			{
+				outputLog.Add(file);
+			}
+
+			CopyDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + "Low/It's Happening/PlateUp", RefVars.packageManagerTempPath + "/PlateUp", true);
+
+			File.WriteAllLines(RefVars.packageManagerTempPath + "/Debug.log", outputLog.ToArray());
+
+			ZipFile.CreateFromDirectory(RefVars.packageManagerTempPath, System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Debug.zip");
+
+			Directory.Delete(RefVars.packageManagerTempPath, true);
+			
+			MessageBox.Show("Debug Zip Generated");
+		}
+		private static void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
+		{
+			var dir = new DirectoryInfo(sourceDir);
+			if (!dir.Exists)
+				throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
+			DirectoryInfo[] dirs = dir.GetDirectories();
+			Directory.CreateDirectory(destinationDir);
+			foreach (FileInfo file in dir.GetFiles())
+			{
+				string targetFilePath = Path.Combine(destinationDir, file.Name);
+				file.CopyTo(targetFilePath);
+			}
+			if (recursive)
+			{
+				foreach (DirectoryInfo subDir in dirs)
+				{
+					string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+					CopyDirectory(subDir.FullName, newDestinationDir, true);
+				}
+			}
+		}
+		private void button_update_Click(object sender, EventArgs e)
+		{
+			if (VersionManager.IsCurrentVersionOutdated())
+			{
+				DialogResult dialogResult = MessageBox.Show("We've found an update! Do you want to install it?\n\n Once the update is downloaded, Manager will close.", "Manager Update!", MessageBoxButtons.YesNo);
+				if (dialogResult == DialogResult.Yes)
+				{
+					UpdateManager.Update();
+				}
+			}
+		}
+
+		private void button_mods_refresh_Click(object sender, EventArgs e)
+		{
+			List<string> repos = new List<string>();
+			foreach (Repository repo in RepositoryManager.GetInstalledRepositories())
+			{
+				repos.Add(repo.URL);
+			}
+
+			RepositoryManager.SetInstalledRepositories(new List<Repository>());
+
+			foreach (string repo in repos)
+			{
+				RepositoryManager.AddInstalledRepository(RepositoryManager.GetRepositoryInfo(repo));
+			}
+
+			RefreshInstalledRepositories();
+			RefreshSearchPage();
+		}
+
+		private void button_launch_vanilla_Click(object sender, EventArgs e)
+		{
+			//Process.Start(exe);
+		}
+
+		private void button_launch_Click(object sender, EventArgs e)
+		{
+			Process.Start("steam://rungameid/1599600");
 		}
 	}
 
@@ -953,6 +1254,7 @@ namespace PlateUp_Package_Manager
 				InstallPackage(RefVars.packageManagerTempPath + "/" + currentlyInstalling.ID + "-" + currentlyInstalling.Version + ".plateupmod");
 				currentlyInstalling = null;
 				MainForm.RefreshSearchPage();
+				MainForm.RefreshInstalledPackagesPage();
 			}
 		}
 		private static void Downloaded(object sender, AsyncCompletedEventArgs e)
@@ -1197,4 +1499,6 @@ namespace PlateUp_Package_Manager
 		{
 		}
 	}
+
+
 }
