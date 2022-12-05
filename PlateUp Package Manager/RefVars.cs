@@ -39,7 +39,8 @@ namespace PlateUp_Package_Manager
 
 		public static void UniversalOnFormLoad(Form form)
 		{
-			form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch + " - UIBeta v2";
+			//form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch + " - UIBeta v3";
+			form.Text = form.Text + " v" + VersionManager.GetCurrentVersion().Major + "." + VersionManager.GetCurrentVersion().Minor + "." + VersionManager.GetCurrentVersion().Patch;
 
 		}
 

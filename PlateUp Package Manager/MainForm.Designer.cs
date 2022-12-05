@@ -489,12 +489,16 @@
 			// 
 			// button_manuallInstall
 			// 
-			this.button_manuallInstall.Location = new System.Drawing.Point(89, 1246);
+			this.button_manuallInstall.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(159)))), ((int)(((byte)(209)))));
+			this.button_manuallInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button_manuallInstall.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.button_manuallInstall.ForeColor = System.Drawing.SystemColors.Window;
+			this.button_manuallInstall.Location = new System.Drawing.Point(547, 74);
 			this.button_manuallInstall.Name = "button_manuallInstall";
-			this.button_manuallInstall.Size = new System.Drawing.Size(75, 23);
+			this.button_manuallInstall.Size = new System.Drawing.Size(263, 46);
 			this.button_manuallInstall.TabIndex = 5;
 			this.button_manuallInstall.Text = "Manual";
-			this.button_manuallInstall.UseVisualStyleBackColor = true;
+			this.button_manuallInstall.UseVisualStyleBackColor = false;
 			this.button_manuallInstall.Click += new System.EventHandler(this.button_manuallInstall_Click);
 			// 
 			// button_installed_remove
@@ -514,6 +518,7 @@
 			this.panel_search.Controls.Add(this.button_update);
 			this.panel_search.Controls.Add(this.label_currentversion);
 			this.panel_search.Controls.Add(this.button_packageBuilder);
+			this.panel_search.Controls.Add(this.button_manuallInstall);
 			this.panel_search.Controls.Add(this.button_clean);
 			this.panel_search.Location = new System.Drawing.Point(1241, 779);
 			this.panel_search.Name = "panel_search";
@@ -525,7 +530,7 @@
 			this.button_debuglog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(159)))), ((int)(((byte)(209)))));
 			this.button_debuglog.FlatAppearance.BorderSize = 0;
 			this.button_debuglog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button_debuglog.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button_debuglog.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
 			this.button_debuglog.ForeColor = System.Drawing.SystemColors.Window;
 			this.button_debuglog.Location = new System.Drawing.Point(279, 74);
 			this.button_debuglog.Name = "button_debuglog";
@@ -540,7 +545,7 @@
 			this.button_update.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(159)))), ((int)(((byte)(209)))));
 			this.button_update.FlatAppearance.BorderSize = 0;
 			this.button_update.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button_update.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button_update.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
 			this.button_update.ForeColor = System.Drawing.SystemColors.Window;
 			this.button_update.Location = new System.Drawing.Point(11, 74);
 			this.button_update.Name = "button_update";
@@ -801,7 +806,6 @@
 			this.Controls.Add(this.panel_search);
 			this.Controls.Add(this.panel_repositories);
 			this.Controls.Add(this.button_installed_remove);
-			this.Controls.Add(this.button_manuallInstall);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
 			this.Text = "PlateUp Mod Manager";
@@ -881,5 +885,5 @@
 		private System.Windows.Forms.Button button_update;
 		private System.Windows.Forms.Button button_debuglog;
 		private System.Windows.Forms.Button button_launch;
-	}
+    }
 }
