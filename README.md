@@ -1,3 +1,7 @@
+# Archived
+
+PlateUp-Package-Manager has now been archived as PlateUp! is now on the Steam Workshop, and this manager has no remaining use.
+
 # PlateUp-Package-Manager (PPM)
 
 ## Description
@@ -6,7 +10,7 @@ PlateUp Package Manager (PPM) is designed to make PlateUp modding much easier wi
 
 ## Installation
 
-- To install PlateUp-Package-Manager, you need to extract ` PlateUp.Package.Manager.zip` into an empty directory, and start `Launcher.exe`
+- To install PlateUp-Package-Manager, you need to extract `PlateUp.Package.Manager.zip` into an empty directory, and start `Launcher.exe`
 
 ## Usage
 
